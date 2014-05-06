@@ -5,12 +5,12 @@
     android:layout_height="fill_parent">
     
     <FrameLayout
-        android:id="@+id/main_framelayout"
+        android:id="@+id/mainactivity_framelayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
     
-    <ListView android:id="@+id/main_navdrawer_list"
-        android:layout_width="240dp"
+    <ListView android:id="@+id/mainactivity_navdrawer"
+        android:layout_width="250dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:choiceMode="singleChoice"

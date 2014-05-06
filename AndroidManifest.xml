@@ -23,6 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="com.mercury.pulse.activities.ServerInfoActivity"
+            android:label="Server Info"
+            android:parentActivityName="com.mercury.pulse.activities.MainActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mercury.pulse.activities.MainActivity" />
+        </activity>
     </application>
 
 </manifest>
