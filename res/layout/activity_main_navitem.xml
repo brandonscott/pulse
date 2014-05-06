@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp" >
+
+    <ImageView
+        android:id="@+id/main_navitem_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingRight="10dp" />
+
+    <TextView
+        android:id="@+id/main_navitem_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/main_navitem_icon"
+        android:fontFamily="sans-serif-condensed"
+        android:textColor="#373737"
+        android:textSize="22sp" />
+
+</RelativeLayout>
