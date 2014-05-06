@@ -11,7 +11,7 @@ import com.mercury.pulse.views.SmallPieChartView;
 public class ServerInfoActivity extends Activity {
 	
 	private PieChartView					mPieChart;
-	private SmallPieChartView 			mPieChart2, mPieChart3;
+	private SmallPieChartView 				mPieChart2, mPieChart3;
 	
 	@Override
 	/**
