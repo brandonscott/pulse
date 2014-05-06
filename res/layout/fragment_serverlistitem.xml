@@ -8,8 +8,8 @@
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:src="@drawable/col_main" />
+        android:layout_marginTop="10dp"/>
+        <!-- android:src="@drawable/col_main" --> 
 
     <TextView
         android:id="@+id/serverlist_servername"

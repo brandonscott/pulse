@@ -6,6 +6,7 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -32,7 +33,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private ActionBarDrawerToggle mNavDrawerToggle;
 	private Fragment mServerListFragment;
 	private int mFrameLayout = R.id.mainactivity_framelayout;
-	
+
 	@Override
 	/**
 	 * override onCreate to provide out layout file and execute init()
@@ -43,7 +44,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		init();
 	}
-	
+
 	/**
 	 * performs initialisation activities such as configuring actionbar & navdrawer, and instantiating fragments
 	 */
@@ -56,17 +57,17 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		//instantiate Fragments
 		mServerListFragment = new ServerListFragment();
-		
+
 		//setup navdrawer
 		mNavDrawer = (DrawerLayout)findViewById(R.id.main_navdrawer);
 		mNavDrawerList = (ListView)findViewById(R.id.mainactivity_navdrawer);
-		
+
 		//populate navdrawer
 		mNavDrawerItems = new ArrayList<NavDrawerListItem>();
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "navdrawer item one"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "navdrawer item two"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "navdrawer item three"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "navdrawer item four"));
+		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Talbot Site"));
+		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Lansdowne Site"));
+		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Jurassic Site"));
+		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Weymouth Site"));
 
 		//set navdrawer adapter
 		mNavDrawerList.setAdapter(new NavDrawerListAdapter(this, R.layout.activity_main_navdraweritem, mNavDrawerItems));
@@ -75,12 +76,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		//configure fragment manager
 		FragmentTransaction mFragMan = getFragmentManager().beginTransaction();
 		mFragMan.replace(mFrameLayout, mServerListFragment); //set default fragment
-		
+
 		// Change the app icon to show/hide nav drawer on click
 		mNavDrawerToggle = new ActionBarDrawerToggle(this, mNavDrawer, R.drawable.ic_drawer, R.string.main_navdrawer_open, R.string.main_navdrawer_close);
 		mNavDrawer.setDrawerListener(mNavDrawerToggle);
-		
-		
+
+
 		mFragMan.commit();
 	}
 
@@ -96,17 +97,17 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	 */
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		if (arg2 == 0) {
-        	Toast.makeText(getApplicationContext(), "navdrawer item 1",
-     			   Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "navdrawer item 1",
+					Toast.LENGTH_LONG).show();
 		} else if (arg2 == 1) {
-        	Toast.makeText(getApplicationContext(), "navdrawer item 2",
-     			   Toast.LENGTH_LONG).show();
+			Toast.makeText(getApplicationContext(), "navdrawer item 2",
+					Toast.LENGTH_LONG).show();
 		} else {
 			//fail
 		}
 		mNavDrawer.closeDrawers();
 	}
-	
+
 	@Override
 	protected void onPostCreate(Bundle savedInstanceState) {
 		super.onPostCreate(savedInstanceState);
@@ -138,18 +139,18 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		if (mNavDrawerToggle.onOptionsItemSelected(item)){
 			return true;
 		} else {
-			 switch (item.getItemId()) {
-		        case R.id.action_about:
-		        	Toast.makeText(getApplicationContext(), "'about' clicked",
-		        			   Toast.LENGTH_LONG).show();
-		            return true;
-		        case R.id.action_settings:
-		        	Toast.makeText(getApplicationContext(), "'settings' clicked",
-		        			   Toast.LENGTH_LONG).show();
-		            return true;
-		        default:
-		            return super.onOptionsItemSelected(item);
-		    }
+			switch (item.getItemId()) {
+			case R.id.action_about:
+				Intent i = new Intent(getBaseContext(), AboutActivity.class);                      
+				startActivity(i);
+				return true;
+			case R.id.action_settings:
+				Toast.makeText(getApplicationContext(), "'settings' clicked",
+						Toast.LENGTH_LONG).show();
+				return true;
+			default:
+				return super.onOptionsItemSelected(item);
+			}
 		}
 	}
 
