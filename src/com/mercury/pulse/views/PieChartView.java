@@ -10,6 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class PieChartView extends View {
+	
 	private int								mPercentage;
 	private Paint							mCentreNumberPaint;
 	private RectF							mRect;

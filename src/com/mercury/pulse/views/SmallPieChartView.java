@@ -8,12 +8,10 @@ import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 public class SmallPieChartView extends View {
 
-	private static final String				TAG = SmallPieChartView.class.getSimpleName();
 	private int								mPercentage;
 	private Paint							mCentreTextPaint, mCentreNumberPaint;
 	private RectF							mRect;
@@ -32,7 +30,6 @@ public class SmallPieChartView extends View {
 	}
 
 	private void init(Context c){
-		Log.d(TAG,"Init called");
 		//define our colors array
 		mColours = new int[3];
 		mColours[0] = Color.parseColor("#99CC00");
