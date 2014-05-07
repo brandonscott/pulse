@@ -1,7 +1,6 @@
 package com.mercury.pulse.activities;
 
 import java.util.ArrayList;
-
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -25,7 +24,7 @@ import com.mercury.pulse.fragments.ServerListFragment;
 import com.mercury.pulse.objects.NavDrawerListItem;
 
 public class MainActivity extends Activity implements OnItemClickListener {
-
+	
 	private ArrayList<NavDrawerListItem> mNavDrawerItems;
 	private DrawerLayout mNavDrawer;
 	private ListView mNavDrawerList;
@@ -153,5 +152,5 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			}
 		}
 	}
-
+	
 }

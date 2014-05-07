@@ -1,6 +1,11 @@
 package com.mercury.pulse.fragments;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.content.Intent;
@@ -24,9 +29,18 @@ import com.example.pulse.R;
 import com.mercury.pulse.activities.ServerInfoActivity;
 import com.mercury.pulse.adapters.ServerListAdapter;
 import com.mercury.pulse.object.Server;
+import com.mercury.pulse.objects.JSONServiceHandler;
 
 
 public class ServerListFragment extends Fragment implements OnItemClickListener {
+
+	//API URL to parse our JSON list of servers from
+	private static String url = "http://cadence-bu.cloudapp.net/cadence/servers";
+	//JSON Node names
+	private static final String JSON_ID = "id";
+	private static final String JSON_DESCRIPTION = "description";
+	// Hashmap for ListView
+	ArrayList<HashMap<String, String>> serverList;
 
 	private ProgressBar							mProgressBar;
 	private TextView							mTextView;
@@ -52,7 +66,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 		super.onOptionsItemSelected(item);
 		return false;
 	}
-	
+
 	@Override
 	public View onCreateView(LayoutInflater layoutInflater, ViewGroup viewGroupContainer, Bundle savedInstanceState) {
 		super.onCreateView(layoutInflater, viewGroupContainer, savedInstanceState);
@@ -67,6 +81,8 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 	@Override
 	public void onStart() {
 		super.onStart();
+
+		//call async task to get json
 		new GetServers().execute();
 	}
 
@@ -78,30 +94,45 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 			mTextView.setVisibility(TextView.INVISIBLE);
 			mServerList = new ArrayList<Server>();
 		}
-		
+
 		@Override
 		protected Exception doInBackground(Void... params) {
 			try {
-				Server newServer = new Server(1, "Win7");
-				mServerList.add(newServer);
-				newServer = new Server(2, "Win8");
-				mServerList.add(newServer);
-				newServer = new Server(3, "Win9");
-				mServerList.add(newServer);
-				newServer = new Server(4, "Win5");
-				mServerList.add(newServer);
-				newServer = new Server(5, "Win3");
-				mServerList.add(newServer);
-				newServer = new Server(7, "Win3");
-				mServerList.add(newServer);
-				newServer = new Server(6, "Win3");
-				mServerList.add(newServer);				
+				// Creating service handler class instance
+				JSONServiceHandler jsonHandler = new JSONServiceHandler();
+
+				// Making a request to url and getting response
+				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET);
+
+				Log.d("Response: ", "> " + jsonStr);
+
+				if (jsonStr != null) {
+					try {
+						JSONArray jsonArr = new JSONArray(jsonStr);
+
+						for(int i=0; i<jsonArr.length(); i++)
+						{
+							JSONObject obj=jsonArr.getJSONObject(i);
+							try {
+								Server newServer = new Server(Integer.parseInt(obj.getString(JSON_ID)), obj.getString(JSON_DESCRIPTION));
+								mServerList.add(newServer);
+							} catch (NumberFormatException e) {
+								Log.e("GetServers", "Server ID could not be parsed as an integer...");
+							}
+							//Log.d("PARSEMESOMEMOTHERFUCKINGJSON", "id: " + id + " description: " + description);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					Log.e("ServiceHandler", "Couldn't get any data from the url");
+				}
+				return null;
 			} catch (Exception e) {
 				return e;
 			}
-			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(Exception exception){
 			mProgressBar.setVisibility(ProgressBar.INVISIBLE);
@@ -130,7 +161,10 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		Intent i = new Intent(getActivity(), ServerInfoActivity.class);                      
+		Bundle b = new Bundle();
+		b.putInt("SERVERID", ((Server)arg1.getTag()).getServerID());
+		Intent i = new Intent(getActivity(), ServerInfoActivity.class);
+		i.putExtras(b);
 		startActivity(i);
 	}
 }
