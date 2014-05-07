@@ -11,9 +11,12 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
+
+import android.util.Base64;
 
 public class JSONServiceHandler {
 
@@ -65,7 +68,10 @@ public class JSONServiceHandler {
 							.format(params, "utf-8");
 					url += "?" + paramString;
 				}
-				HttpGet httpGet = new HttpGet(url);
+				HttpUriRequest httpGet = new HttpGet(url);
+				String credentials = "brandon@brandonscott.co.uk" + ":" + "Cadenc3!";
+				String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
+				httpGet.addHeader("Authorization", "Basic " + base64EncodedCredentials);
 
 				httpResponse = httpClient.execute(httpGet);
 

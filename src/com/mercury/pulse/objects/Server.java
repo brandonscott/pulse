@@ -1,4 +1,4 @@
-package com.mercury.pulse.object;
+package com.mercury.pulse.objects;
 
 public class Server {
 

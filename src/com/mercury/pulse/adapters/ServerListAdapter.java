@@ -1,6 +1,7 @@
 package com.mercury.pulse.adapters;
 
 import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pulse.R;
-import com.mercury.pulse.object.Server;
+import com.mercury.pulse.objects.Server;
 
 
 public class ServerListAdapter extends ArrayAdapter<Server> {
