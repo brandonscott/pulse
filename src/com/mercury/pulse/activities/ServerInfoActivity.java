@@ -1,12 +1,12 @@
 package com.mercury.pulse.activities;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -14,13 +14,12 @@ import android.widget.TextView;
 import com.example.pulse.R;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Pulse;
-import com.mercury.pulse.objects.Server;
 import com.mercury.pulse.views.PieChartView;
 import com.mercury.pulse.views.SmallPieChartView;
 import com.pubnub.api.Callback;
 import com.pubnub.api.Pubnub;
-import com.pubnub.api.PubnubException;
 import com.pubnub.api.PubnubError;
+import com.pubnub.api.PubnubException;
 
 public class ServerInfoActivity extends Activity {
 
@@ -42,6 +41,8 @@ public class ServerInfoActivity extends Activity {
 	private TextView mServerName, mWindowsVersion, mServicePack, mUptime;
 	private PieChartView mPieChart;
 	private SmallPieChartView mPieChart2, mPieChart3;
+	//create Handler for UI thread updating
+	Handler mHandler = new Handler();
 
 	private Pubnub pubnub = new Pubnub("pub-c-18bc7bd1-2981-4cc4-9c4e-234d25519d36", "sub-c-5782df52-d147-11e3-93dd-02ee2ddab7fe");
 
@@ -104,13 +105,15 @@ public class ServerInfoActivity extends Activity {
 
 				@Override
 				public void successCallback(String channel, Object message) {
-					runOnUiThread(new Runnable() {
-					     @Override
-					     public void run() {
-					    		mServerName.setText("dddsdsdds");
-					    }
-					});
-				
+					Runnable runnable = new Runnable() {
+						@Override
+						public void run() {
+							//mServerName.setText("dddsdsdds");
+							new GetPulse().execute();
+						}
+					};
+					mHandler.post(runnable);
+
 					System.out.println("SUBSCRIBE : " + channel + " : "
 							+ message.getClass() + " : " + message.toString());
 				}
@@ -127,18 +130,24 @@ public class ServerInfoActivity extends Activity {
 		}
 	}
 
-	public class GetPulse extends AsyncTask<Void, Void, Void>{
+	public class GetPulse extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected void onPreExecute() {
-			//hide views until the JSON has been parsed
-			mServerName.setVisibility(View.GONE);
-			mWindowsVersion.setVisibility(View.GONE);
-			mServicePack.setVisibility(View.GONE);
-			mUptime.setVisibility(View.GONE);
+			runOnUiThread(new Runnable() {  
+				@Override
+				public void run() {
+					//hide views until the JSON has been parsed
+					mServerName.setVisibility(View.GONE);
+					mWindowsVersion.setVisibility(View.GONE);
+					mServicePack.setVisibility(View.GONE);
+					mUptime.setVisibility(View.GONE);
 
-			mPieChart.setVisibility(View.GONE);
-			mPieChart2.setVisibility(View.GONE);
-			mPieChart3.setVisibility(View.GONE);						
+					mPieChart.setVisibility(View.GONE);
+					mPieChart2.setVisibility(View.GONE);
+					mPieChart3.setVisibility(View.GONE);
+					Log.e("onPreExecute", "aaa");
+				}
+			});
 		}
 
 		@Override
@@ -176,26 +185,35 @@ public class ServerInfoActivity extends Activity {
 				//return e;
 			}
 
-
-			mServerName.setText("aaaa");
-			mWindowsVersion.setText("blaaaaaag");
-			mServicePack.setText("blaah");
-			mUptime.setText("Uptime: " + latestPulse.getUptime());
-			mPieChart.setData(latestPulse.getCPUUsage());
-			mPieChart2.setData(latestPulse.getRAMUsage());
-			mPieChart3.setData(latestPulse.getHDDUsage());
+			runOnUiThread(new Runnable() {  
+				@Override
+				public void run() {
+					mServerName.setText("aaaa");
+					mWindowsVersion.setText("blaaaaaag");
+					mServicePack.setText("blaah");
+					mUptime.setText("Uptime: " + latestPulse.getUptime());
+					mPieChart.setData(latestPulse.getCPUUsage());
+					mPieChart2.setData(latestPulse.getRAMUsage());
+					mPieChart3.setData(latestPulse.getHDDUsage());
+				}
+			});
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Void no){
-			mServerName.setVisibility(View.VISIBLE);
-			mWindowsVersion.setVisibility(View.VISIBLE);
-			mServicePack.setVisibility(View.VISIBLE);
-			mUptime.setVisibility(View.VISIBLE);
-			mPieChart.setVisibility(View.VISIBLE);
-			mPieChart2.setVisibility(View.VISIBLE);
-			mPieChart3.setVisibility(View.VISIBLE);
+		protected void onPostExecute(Void no) {
+			runOnUiThread(new Runnable() {  
+				@Override
+				public void run() {
+					mServerName.setVisibility(View.VISIBLE);
+					mWindowsVersion.setVisibility(View.VISIBLE);
+					mServicePack.setVisibility(View.VISIBLE);
+					mUptime.setVisibility(View.VISIBLE);
+					mPieChart.setVisibility(View.VISIBLE);
+					mPieChart2.setVisibility(View.VISIBLE);
+					mPieChart3.setVisibility(View.VISIBLE);
+				}
+			});
 		}
 	}
 
