@@ -23,7 +23,7 @@ import android.widget.Toast;
 import com.example.pulse.R;
 import com.mercury.pulse.activities.ServerInfoActivity;
 import com.mercury.pulse.adapters.ServerListAdapter;
-import com.mercury.pulse.object.Server;
+import com.mercury.pulse.objects.Server;
 
 
 public class ServerListFragment extends Fragment implements OnItemClickListener {

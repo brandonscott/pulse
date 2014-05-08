@@ -1,6 +1,7 @@
 package com.mercury.pulse.activities;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import android.os.Bundle;
@@ -18,12 +19,16 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
+import com.mercury.pulse.objects.Pulse;
 import com.example.pulse.R;
 
 public class GraphActivity extends Activity {
 	//week in 30 second segments = 20160
 	private final static int WEEK = 20160;
 	private GraphView graphView;
+	private ArrayList<Pulse> pulses = new ArrayList<Pulse>();
+	
+	//JSONArray pulses = null;
 
 	double roundTwoDecimals(double d) {
 		DecimalFormat twoDForm = new DecimalFormat("#.##");
@@ -46,6 +51,14 @@ public class GraphActivity extends Activity {
 			graphView.setViewPort(0,20160);
 		}
 		
+	}
+	
+	private ArrayList<Pulse> populatePulses(int maxData) {
+		ArrayList<Pulse> p = new ArrayList<Pulse>();
+		for (int i = 0; i<maxData; i++) {
+			p.add(new Pulse(i, 1, (int) Math.floor(Math.random()*100)+1, 0, 0, 0, i));
+		}
+		return p;
 	}
 
 	@Override
@@ -77,8 +90,9 @@ public class GraphActivity extends Activity {
 			}
 		});
 		GraphViewData[] data = new GraphViewData[WEEK];
+		pulses = populatePulses(WEEK);
 		for (int i=0; i<WEEK; i++) {
-			data[i] = new GraphViewData(i, Math.floor(Math.random()*100)+1);
+			data[i] = new GraphViewData(i, pulses.get(i).getRAMUsage());
 		}
 		graphView = new LineGraphView(
 				this
@@ -108,7 +122,6 @@ public class GraphActivity extends Activity {
 		weekLayout.addView(graphView);
 
 	}
-	
 	
 
 }
