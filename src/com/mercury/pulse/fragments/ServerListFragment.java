@@ -151,7 +151,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 			} else {
 				if (mServerList == null || mServerList.size() < 1) {
 					mTextView.setVisibility(View.VISIBLE);
-					mTextView.setText("Authentication Failed!");
+					mTextView.setText("Server Group Empty!");
 					Log.i("ServerListFragment", "Server ArrayList empty");
 				} else {
 					try {

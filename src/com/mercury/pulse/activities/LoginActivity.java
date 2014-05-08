@@ -9,6 +9,8 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +25,9 @@ public class LoginActivity extends Activity {
 	//JSON Pulse Node names
 	private static final String JSON_SUCCESS = "success";
 	//define some instance variables
-	private TextView mUsername, mPassword;
+	private TextView mUsername, mPassword, mLoginStatus;
+	private Button mSignIn;
+	private ProgressBar mSpinner;
 	//create a preferences handler
 	private PreferencesHandler preferencesHandler = new PreferencesHandler();
 
@@ -45,6 +49,13 @@ public class LoginActivity extends Activity {
 		protected void onPreExecute() {
 			mUsername = (TextView) findViewById (R.id.email);
 			mPassword = (TextView) findViewById (R.id.password);
+			mLoginStatus = (TextView) findViewById (R.id.loginstatus);
+			mSpinner = (ProgressBar) findViewById (R.id.loginactivity_progressbar);
+			mSignIn = (Button) findViewById (R.id.sign_in_button);
+			
+			mSpinner.setVisibility(View.VISIBLE);
+			mSignIn.setEnabled(false);
+			mLoginStatus.setText("Logging In...");
 		}
 
 		@Override
@@ -67,7 +78,11 @@ public class LoginActivity extends Activity {
 								
 								Intent i = new Intent(getBaseContext(), MainActivity.class);                      
 								startActivity(i);
+								finish();
 							} else {
+								mSpinner.setVisibility(View.INVISIBLE);
+								mSignIn.setEnabled(true);
+								mLoginStatus.setText("");
 								Toast.makeText(getApplicationContext(), "Login Incorrect", Toast.LENGTH_LONG).show();
 							}
 						} catch (Exception e) {
@@ -87,7 +102,7 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void no) {
-
+			
 		}
 	}
 }

@@ -30,7 +30,6 @@ import android.widget.Toast;
 
 import com.example.pulse.R;
 import com.mercury.pulse.adapters.NavDrawerListAdapter;
-import com.mercury.pulse.fragments.SelectDefaultFragment;
 import com.mercury.pulse.fragments.ServerListFragment;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
@@ -43,7 +42,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private ListView mNavDrawerList;
 	private ActionBar mActionBar;
 	private ActionBarDrawerToggle mNavDrawerToggle;
-	private Fragment mServerListFragment, mSelectDefaultFragment;
+	private Fragment mServerListFragment;
 	private int mFrameLayout = R.id.mainactivity_framelayout;
 	//API URL to parse our JSON list of servers from
 	private static String url = "http://cadence-bu.cloudapp.net/servergroups";
@@ -80,7 +79,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		//instantiate Fragments
 		mServerListFragment = new ServerListFragment();
-		mSelectDefaultFragment = new SelectDefaultFragment();
 
 		//setup navdrawer
 		mNavDrawer = (DrawerLayout)findViewById(R.id.main_navdrawer);
@@ -128,6 +126,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	 */
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(arg2).getServerGroupID());
+		mActionBar.setTitle(mNavDrawerItems.get(arg2).getServerGroupName());
 		mNavDrawer.closeDrawers();
 	}
 
