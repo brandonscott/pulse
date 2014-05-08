@@ -36,7 +36,7 @@ import com.mercury.pulse.objects.Server;
 public class ServerListFragment extends Fragment implements OnItemClickListener {
 
 	//API URL to parse our JSON list of servers from
-	private static String url = "http://cadence-bu.cloudapp.net/servers";
+	private static String url = "http://cadence-bu.cloudapp.net/servergroups/";
 	//JSON Node names
 	private static final String JSON_ID = "id";
 	private static final String JSON_NAME = "name";
@@ -50,7 +50,6 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 	private GridView							mGridView;
 	private ArrayList<Server>					mServerList;
 	private ServerListAdapter					mServerListAdapter;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -86,6 +85,12 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 		super.onStart();
 
 		//call async task to get json
+		new GetServers().execute();
+	}
+	
+	public void setServerGroupID(int serverGroupID) {
+		url = "http://cadence-bu.cloudapp.net/servergroups/" + serverGroupID + "/servers";
+		//url += "/" + serverGroupID + "/servers";
 		new GetServers().execute();
 	}
 

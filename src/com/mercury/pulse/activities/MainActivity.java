@@ -2,6 +2,10 @@ package com.mercury.pulse.activities;
 
 import java.util.ArrayList;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,9 +15,11 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,18 +30,28 @@ import android.widget.Toast;
 
 import com.example.pulse.R;
 import com.mercury.pulse.adapters.NavDrawerListAdapter;
+import com.mercury.pulse.fragments.SelectDefaultFragment;
 import com.mercury.pulse.fragments.ServerListFragment;
-import com.mercury.pulse.objects.NavDrawerListItem;
+import com.mercury.pulse.helpers.PreferencesHandler;
+import com.mercury.pulse.objects.JSONServiceHandler;
+import com.mercury.pulse.objects.ServerGroup;
 
 public class MainActivity extends Activity implements OnItemClickListener {
 
-	private ArrayList<NavDrawerListItem> mNavDrawerItems;
+	private ArrayList<ServerGroup> mNavDrawerItems;
 	private DrawerLayout mNavDrawer;
 	private ListView mNavDrawerList;
 	private ActionBar mActionBar;
 	private ActionBarDrawerToggle mNavDrawerToggle;
-	private Fragment mServerListFragment;
+	private Fragment mServerListFragment, mSelectDefaultFragment;
 	private int mFrameLayout = R.id.mainactivity_framelayout;
+	//API URL to parse our JSON list of servers from
+	private static String url = "http://cadence-bu.cloudapp.net/servergroups";
+	//JSON servergroup Node names
+	private static final String JSON_SERVERGROUPID = "id";
+	private static final String JSON_SITENAME= "name";
+	//create a preferences handler
+	private PreferencesHandler preferencesHandler = new PreferencesHandler();
 
 	@Override
 	/**
@@ -64,21 +80,19 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		//instantiate Fragments
 		mServerListFragment = new ServerListFragment();
+		mSelectDefaultFragment = new SelectDefaultFragment();
 
 		//setup navdrawer
 		mNavDrawer = (DrawerLayout)findViewById(R.id.main_navdrawer);
 		mNavDrawerList = (ListView)findViewById(R.id.mainactivity_navdrawer);
 
-		//populate navdrawer
-		mNavDrawerItems = new ArrayList<NavDrawerListItem>();
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_qr, "Scan QR Code"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Talbot Site"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Lansdowne Site"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Jurassic Site"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Weymouth Site"));		
+		//instantiate navdrawer arraylist
+		mNavDrawerItems = new ArrayList<ServerGroup>();
+		
+		//mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_qr, "Scan QR Code"));
+		new GetServerGroups().execute();
 
-		//set navdrawer adapter
-		mNavDrawerList.setAdapter(new NavDrawerListAdapter(this, R.layout.activity_main_navdraweritem, mNavDrawerItems));
+		//set navdrawer listener
 		mNavDrawerList.setOnItemClickListener(this);
 
 		//configure fragment manager
@@ -88,7 +102,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		// Change the app icon to show/hide nav drawer on click
 		mNavDrawerToggle = new ActionBarDrawerToggle(this, mNavDrawer, R.drawable.ic_drawer, R.string.main_navdrawer_open, R.string.main_navdrawer_close);
 		mNavDrawer.setDrawerListener(mNavDrawerToggle);
-
 
 		mFragMan.commit();
 	}
@@ -114,18 +127,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	 * 
 	 */
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		if (arg2 == 0) {
-			Intent i = new Intent(getBaseContext(), QRCodeActivity.class);                      
-			startActivity(i);
-		} else if (arg2 == 1) {
-			Toast.makeText(getApplicationContext(), "navdrawer item 2",
-					Toast.LENGTH_LONG).show();
-		} else if (arg2 == 2) {
-			Toast.makeText(getApplicationContext(), "navdrawer item 3",
-					Toast.LENGTH_LONG).show();
-		} else {
-			//fail
-		}
+		((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(arg2).getServerGroupID());
 		mNavDrawer.closeDrawers();
 	}
 
@@ -172,6 +174,56 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			default:
 				return super.onOptionsItemSelected(item);
 			}
+		}
+	}
+
+	private class GetServerGroups extends AsyncTask<Void, Void, Exception> {
+		@Override
+		protected void onPreExecute() {
+
+		}
+
+		@Override
+		protected Exception doInBackground(Void... params) {
+			try {
+				// Creating service handler class instance
+				JSONServiceHandler jsonHandler = new JSONServiceHandler();
+
+				// Making a request to url and getting response
+				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
+
+				Log.d("Response: ", "> " + jsonStr);
+
+				if (jsonStr != null) {
+					try {
+						JSONArray jsonArr = new JSONArray(jsonStr);
+
+						for(int i=0; i<jsonArr.length(); i++)
+						{
+							JSONObject obj=jsonArr.getJSONObject(i);
+							try {
+								mNavDrawerItems.add(new ServerGroup(obj.getInt(JSON_SERVERGROUPID), obj.getString(JSON_SITENAME)));
+							} catch (NumberFormatException e) {
+								Log.e("GetServers", "Server ID could not be parsed as an integer...");
+							}
+							//Log.d("PARSEMESOMEMOTHERFUCKINGJSON", "id: " + id + " description: " + description);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					Log.e("ServiceHandler", "Couldn't get any data from the url");
+				}
+				return null;
+			} catch (Exception e) {
+				return e;
+			}
+		}
+
+		@Override
+		protected void onPostExecute(Exception exception) {
+			Log.e("222", ((ServerGroup) mNavDrawerItems.get(0)).getServerGroupName());
+			mNavDrawerList.setAdapter(new NavDrawerListAdapter(getApplicationContext(), R.layout.activity_main_navdraweritem, mNavDrawerItems));
 		}
 	}
 
