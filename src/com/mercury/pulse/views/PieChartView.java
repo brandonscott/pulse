@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.View;
 
 public class PieChartView extends View {
+	
 	private int								mPercentage;
 	private Paint							mCentreNumberPaint;
 	private RectF							mRect;
@@ -35,6 +37,7 @@ public class PieChartView extends View {
 		mColours[2] = Color.parseColor("#FF4444");
 
 		mCentreNumberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mCentreNumberPaint.setTextAlign(Align.CENTER);
 		mCentreNumberPaint.setColor(Color.parseColor("#efefef"));
 		mCentreNumberPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
 		mCentreNumberPaint.setTextSize(140); //use large text size
@@ -52,9 +55,10 @@ public class PieChartView extends View {
 		//draw the outer circle
 		canvas.drawArc(mRect, (float) 0f, (float) 360.00, true, paintPieChart());
 		//draw the inner text
-		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2-105,
+		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2,
 				(getHeight()/2)+40, mCentreNumberPaint);
 		canvas.save();
+		invalidate();
 	}
 
 	private Paint paintPieChart(){

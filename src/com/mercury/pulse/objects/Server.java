@@ -46,5 +46,4 @@ public class Server {
 	public void setServicePack(String serverServicePack) {
 		this.serverServicePack = serverServicePack;
 	}
-	
 }

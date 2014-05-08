@@ -7,5 +7,9 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry exported="true" kind="var" path="GRAPH_VIEW_JARS/GraphView-3.1.1.jar"/>
 	<classpathentry kind="var" path="GRAPH_VIEW_JARS/graphview-3.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Fen/Downloads/java-master/java-master/android/Pubnub-Android-3.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Fen/Downloads/java-master/java-master/java/libs/bcprov-jdk15on-1.47.jar"/>
+	<classpathentry kind="lib" path="libs/bcprov-jdk15on-1.47.jar"/>
+	<classpathentry kind="lib" path="libs/Pubnub-Android-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

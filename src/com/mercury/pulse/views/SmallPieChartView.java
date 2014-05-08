@@ -8,12 +8,10 @@ import android.graphics.Paint.Align;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 public class SmallPieChartView extends View {
 
-	private static final String				TAG = SmallPieChartView.class.getSimpleName();
 	private int								mPercentage;
 	private Paint							mCentreTextPaint, mCentreNumberPaint;
 	private RectF							mRect;
@@ -32,7 +30,6 @@ public class SmallPieChartView extends View {
 	}
 
 	private void init(Context c){
-		Log.d(TAG,"Init called");
 		//define our colors array
 		mColours = new int[3];
 		mColours[0] = Color.parseColor("#99CC00");
@@ -45,6 +42,7 @@ public class SmallPieChartView extends View {
 		mCentreTextPaint.setTextAlign(Align.CENTER);
 		mCentreTextPaint.setTextSize(80);
 		mCentreNumberPaint = new Paint(mCentreTextPaint);
+		mCentreNumberPaint.setTextAlign(Align.CENTER);
 		mCentreNumberPaint.setColor(Color.parseColor("#efefef"));
 		mCentreNumberPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
 		mCentreNumberPaint.setTextSize(80); //use small text size
@@ -62,9 +60,10 @@ public class SmallPieChartView extends View {
 		//draw the outer circle
 		canvas.drawArc(mRect, (float) 0f, (float) 360.00, true, paintPieChart());
 		//draw the inner text
-		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2+5,
+		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2,
 				(getHeight()/2)+30, mCentreNumberPaint);
 		canvas.save();
+		invalidate();
 	}
 
 	private Paint paintPieChart(){
