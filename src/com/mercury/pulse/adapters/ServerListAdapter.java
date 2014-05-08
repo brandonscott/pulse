@@ -11,13 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.pulse.R;
-import com.mercury.pulse.object.Server;
+import com.mercury.pulse.objects.Server;
 
 
 public class ServerListAdapter extends ArrayAdapter<Server> {
 
 	private ArrayList<Server> mServers;
-	
+
 	public ServerListAdapter(Context context, ArrayList<Server> objects) {
 		super(context, R.layout.fragment_serverlistitem, objects);
 		mServers = objects;
@@ -39,9 +39,10 @@ public class ServerListAdapter extends ArrayAdapter<Server> {
 			//set icon to windows logo
 			ImageView icon = (ImageView)v.findViewById(R.id.serverlist_imageborder);
 			icon.setImageResource(R.drawable.winlogo);
-			
+
 			v.setTag(server);
 		}
 		return v;
 	}
+
 }

@@ -5,5 +5,9 @@
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
+	<classpathentry kind="lib" path="C:/Users/Fen/Downloads/java-master/java-master/android/Pubnub-Android-3.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Fen/Downloads/java-master/java-master/java/libs/bcprov-jdk15on-1.47.jar"/>
+	<classpathentry kind="lib" path="libs/bcprov-jdk15on-1.47.jar"/>
+	<classpathentry kind="lib" path="libs/Pubnub-Android-3.6.0.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
