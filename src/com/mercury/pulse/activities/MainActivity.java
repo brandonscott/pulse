@@ -1,12 +1,16 @@
 package com.mercury.pulse.activities;
 
 import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
@@ -24,7 +28,7 @@ import com.mercury.pulse.fragments.ServerListFragment;
 import com.mercury.pulse.objects.NavDrawerListItem;
 
 public class MainActivity extends Activity implements OnItemClickListener {
-	
+
 	private ArrayList<NavDrawerListItem> mNavDrawerItems;
 	private DrawerLayout mNavDrawer;
 	private ListView mNavDrawerList;
@@ -48,6 +52,10 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	 * performs initialisation activities such as configuring actionbar & navdrawer, and instantiating fragments
 	 */
 	private void init() {
+		//check for internet connection before starting
+		if (isNetworkConnected() == false) {
+			Toast.makeText(getApplicationContext(), "network not connected!", Toast.LENGTH_LONG).show();
+		}
 		//setup Actionbar
 		mActionBar = getActionBar();
 		mActionBar.setDisplayHomeAsUpEnabled(true);
@@ -82,6 +90,16 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 
 		mFragMan.commit();
+	}
+
+	private boolean isNetworkConnected() {
+		ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+		NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+		if (networkInfo == null) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -152,5 +170,5 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			}
 		}
 	}
-	
+
 }

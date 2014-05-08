@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.pulse.R;
 import com.mercury.pulse.objects.JSONServiceHandler;
@@ -39,7 +38,7 @@ public class ServerInfoActivity extends Activity {
 	private static final String JSON_UPTIME = "uptime";
 	private static final String JSON_TIMESTAMP = "timestamp";
 	//JSON Server Node names
-	private static final String JSON_DESCRIPTION = "description";
+	private static final String JSON_SERVERNAME = "name";
 	private static final String JSON_OS_NAME = "os_name";
 	private static final String JSON_OS_VERSION = "os_version";
 	//define a pulse object for the latest pulse
@@ -120,18 +119,19 @@ public class ServerInfoActivity extends Activity {
 
 				@Override
 				public void successCallback(String channel, final Object message) {
-					Runnable runnable = new Runnable() {
+					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
 							try {
-
-								JSONObject obj= new JSONObject(message.toString());
 								try {
-									latestPulse = new Pulse(obj.getInt(JSON_ID), obj.getInt(JSON_SERVERID), obj.getInt(JSON_RAMUSAGE), obj.getInt(JSON_CPUUSAGE), obj.getInt(JSON_HDDUSAGE), obj.getInt(JSON_UPTIME), obj.getInt(JSON_TIMESTAMP));
+									System.out.println("baaah");
+									latestPulse = new Pulse(((JSONObject) message).getInt(JSON_ID), ((JSONObject) message).getInt(JSON_SERVERID), ((JSONObject) message).getInt(JSON_RAMUSAGE), ((JSONObject) message).getInt(JSON_CPUUSAGE), ((JSONObject) message).getInt(JSON_HDDUSAGE), ((JSONObject) message).getInt(JSON_UPTIME), ((JSONObject) message).getInt(JSON_TIMESTAMP));
 									mUptime.setText("Uptime: " + latestPulse.getUptime());
+									System.out.println(latestPulse.getCPUUsage());
 									mPieChart.setData(latestPulse.getCPUUsage());
 									mPieChart2.setData(latestPulse.getRAMUsage());
 									mPieChart3.setData(latestPulse.getHDDUsage());
+									
 								} catch (NumberFormatException e) {
 									Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
 								}
@@ -139,9 +139,8 @@ public class ServerInfoActivity extends Activity {
 								e.printStackTrace();
 							}
 						}
-					};
-					mHandler.post(runnable);
-
+					});
+					
 					System.out.println("SUBSCRIBE : " + channel + " : "
 							+ message.getClass() + " : " + message.toString());
 				}
@@ -159,7 +158,7 @@ public class ServerInfoActivity extends Activity {
 	}
 
 	public class LoadServerInfo extends AsyncTask<Void, Void, Void> {
-		boolean success;
+		boolean success = true;
 
 		@Override
 		protected void onPreExecute() {
@@ -220,7 +219,7 @@ public class ServerInfoActivity extends Activity {
 					try {
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
-							server = new Server(obj.getInt(JSON_ID), obj.getString(JSON_DESCRIPTION), obj.getString(JSON_OS_NAME), obj.getString(JSON_OS_VERSION));
+							server = new Server(obj.getInt(JSON_ID), obj.getString(JSON_SERVERNAME), obj.getString(JSON_OS_NAME), obj.getString(JSON_OS_VERSION));
 						} catch (NumberFormatException e) {
 							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
 						}
@@ -259,18 +258,20 @@ public class ServerInfoActivity extends Activity {
 			runOnUiThread(new Runnable() {  
 				@Override
 				public void run() {
-					if (success != false) {
-						mProgressBar.setVisibility(View.GONE);
-						mServerName.setVisibility(View.VISIBLE);
-						mOSName.setVisibility(View.VISIBLE);
-						mOSVersion.setVisibility(View.VISIBLE);
-						mUptime.setVisibility(View.VISIBLE);
-						mPieChart.setVisibility(View.VISIBLE);
-						mPieChart2.setVisibility(View.VISIBLE);
-						mPieChart3.setVisibility(View.VISIBLE);
-					} else {
-						mProgressBar.setVisibility(View.GONE);
-						mServerName.setVisibility(View.VISIBLE);
+					mProgressBar.setVisibility(View.GONE);
+					mServerName.setVisibility(View.VISIBLE);
+					mOSName.setVisibility(View.VISIBLE);
+					mOSVersion.setVisibility(View.VISIBLE);
+					mServerName.setVisibility(View.VISIBLE);
+					mUptime.setVisibility(View.VISIBLE);
+					mPieChart.setVisibility(View.VISIBLE);
+					mPieChart2.setVisibility(View.VISIBLE);
+					mPieChart3.setVisibility(View.VISIBLE);
+					
+					if (success == false) {
+						mOSName.setVisibility(View.GONE);
+						mOSVersion.setVisibility(View.GONE);
+						mUptime.setVisibility(View.GONE);
 					}
 				}
 			});

@@ -91,12 +91,14 @@
                 android:orientation="vertical" >
 
                 <TextView
-                    android:id="@+id/aboutfragment_boringstuff"
+                    android:id="@+id/aboutfragment_boringstuff_references"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
                     android:background="#fff"
                     android:fontFamily="sans-serif-light"
-                    android:gravity="center"
+                    android:gravity="center_horizontal"
                     android:padding="16dp"
                     android:singleLine="false"
                     android:textColor="#222"

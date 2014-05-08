@@ -56,6 +56,7 @@ public class PieChartView extends View {
 		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2-105,
 				(getHeight()/2)+40, mCentreNumberPaint);
 		canvas.save();
+		invalidate();
 	}
 
 	private Paint paintPieChart(){

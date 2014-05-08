@@ -38,7 +38,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 	private static String url = "http://cadence-bu.cloudapp.net/servers";
 	//JSON Node names
 	private static final String JSON_ID = "id";
-	private static final String JSON_DESCRIPTION = "description";
+	private static final String JSON_NAME = "name";
 	// Hashmap for ListView
 	ArrayList<HashMap<String, String>> serverList;
 
@@ -114,7 +114,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 						{
 							JSONObject obj=jsonArr.getJSONObject(i);
 							try {
-								Server newServer = new Server(Integer.parseInt(obj.getString(JSON_ID)), obj.getString(JSON_DESCRIPTION));
+								Server newServer = new Server(Integer.parseInt(obj.getString(JSON_ID)), obj.getString(JSON_NAME));
 								mServerList.add(newServer);
 							} catch (NumberFormatException e) {
 								Log.e("GetServers", "Server ID could not be parsed as an integer...");
