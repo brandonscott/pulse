@@ -42,6 +42,7 @@ public class SmallPieChartView extends View {
 		mCentreTextPaint.setTextAlign(Align.CENTER);
 		mCentreTextPaint.setTextSize(80);
 		mCentreNumberPaint = new Paint(mCentreTextPaint);
+		mCentreNumberPaint.setTextAlign(Align.CENTER);
 		mCentreNumberPaint.setColor(Color.parseColor("#efefef"));
 		mCentreNumberPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
 		mCentreNumberPaint.setTextSize(80); //use small text size
@@ -59,7 +60,7 @@ public class SmallPieChartView extends View {
 		//draw the outer circle
 		canvas.drawArc(mRect, (float) 0f, (float) 360.00, true, paintPieChart());
 		//draw the inner text
-		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2+5,
+		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2,
 				(getHeight()/2)+30, mCentreNumberPaint);
 		canvas.save();
 		invalidate();
