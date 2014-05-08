@@ -1,14 +1,17 @@
 package com.mercury.pulse.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+
 import com.example.pulse.R;
 import com.mercury.pulse.views.PieChartView;
 import com.mercury.pulse.views.SmallPieChartView;
 
-public class ServerInfoActivity extends Activity {
+public class ServerInfoActivity extends Activity implements OnClickListener {
 	
 	private PieChartView					mPieChart;
 	private SmallPieChartView 			mPieChart2, mPieChart3;
@@ -22,8 +25,11 @@ public class ServerInfoActivity extends Activity {
 		setContentView(R.layout.activity_serverinfo);
 		
 		mPieChart = (PieChartView) findViewById(R.id.stats_piechart);
+		mPieChart.setOnClickListener(this);
 		mPieChart2 = (SmallPieChartView) findViewById(R.id.stats_piechart2);
+		mPieChart2.setOnClickListener(this);
 		mPieChart3 = (SmallPieChartView) findViewById(R.id.stats_piechart3);
+		mPieChart3.setOnClickListener(this);
 
 		updateData();
 	}
@@ -68,6 +74,26 @@ public class ServerInfoActivity extends Activity {
 			mPieChart2.setVisibility(View.VISIBLE);
 			mPieChart3.setVisibility(View.VISIBLE);
 		}
+	}
+
+	@Override
+	public void onClick(View v) {
+		Intent i = new Intent(this, GraphActivity.class);
+		String title = "test";
+		switch (v.getId()) {
+		case R.id.stats_piechart:
+			title = "CPU";
+			break;
+		case R.id.stats_piechart2:
+			title = "RAM";
+			break;
+		case R.id.stats_piechart3:
+			title = "HDD";
+			break;
+		}
+		i.putExtra("title", title);
+		startActivity(i);
+		
 	}
 
 
