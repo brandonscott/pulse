@@ -9,11 +9,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pulse.R;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Pulse;
+import com.mercury.pulse.objects.Server;
 import com.mercury.pulse.views.PieChartView;
 import com.mercury.pulse.views.SmallPieChartView;
 import com.pubnub.api.Callback;
@@ -24,10 +27,10 @@ import com.pubnub.api.PubnubException;
 public class ServerInfoActivity extends Activity {
 
 	//API URL to parse our JSON list of servers from
-	private String url;
+	private String pulseURL, serverURL;
 	//serverid defined from activity bundle
 	private static int SERVERID;
-	//JSON Node names
+	//JSON Pulse Node names
 	private static final String JSON_ID = "id";
 	private static final String JSON_SERVERID = "server_id";
 	private static final String JSON_RAMUSAGE = "ram_usage";
@@ -35,12 +38,19 @@ public class ServerInfoActivity extends Activity {
 	private static final String JSON_HDDUSAGE = "disk_usage";
 	private static final String JSON_UPTIME = "uptime";
 	private static final String JSON_TIMESTAMP = "timestamp";
+	//JSON Server Node names
+	private static final String JSON_DESCRIPTION = "description";
+	private static final String JSON_OS_NAME = "os_name";
+	private static final String JSON_OS_VERSION = "os_version";
 	//define a pulse object for the latest pulse
 	private Pulse latestPulse;
+	//define a server object to model the server
+	private Server server;
 	//define views
-	private TextView mServerName, mWindowsVersion, mServicePack, mUptime;
+	private TextView mServerName, mOSName, mOSVersion, mUptime, mCPUUsage, mRAMUsage, mHDDUsage;
 	private PieChartView mPieChart;
 	private SmallPieChartView mPieChart2, mPieChart3;
+	private ProgressBar mProgressBar;
 	//create Handler for UI thread updating
 	Handler mHandler = new Handler();
 
@@ -55,7 +65,7 @@ public class ServerInfoActivity extends Activity {
 		setContentView(R.layout.activity_serverinfo); 
 
 		init();
-		new GetPulse().execute();
+		new LoadServerInfo().execute();
 	}
 
 	private void init() {
@@ -63,19 +73,24 @@ public class ServerInfoActivity extends Activity {
 		Bundle bundle = getIntent().getExtras();
 		SERVERID = bundle.getInt("SERVERID");
 
-		//API URL to parse our JSON server data from
-		url = "http://cadence-bu.cloudapp.net/cadence/servers/" + SERVERID + "/pulses/latest";
+		//API URL to parse our JSON pulse data from
+		pulseURL = "http://cadence-bu.cloudapp.net/servers/" + SERVERID + "/pulses/latest";
+		//API URL to parse our JSON pulse data from
+		serverURL = "http://cadence-bu.cloudapp.net/servers/" + SERVERID;
 
 		//find views
 		mServerName = (TextView) findViewById(R.id.serverinfoactivity_servername);
-		mWindowsVersion = (TextView) findViewById(R.id.serverinfoactivity_windowsversion);
-		mServicePack = (TextView) findViewById(R.id.serverinfoactivity_servicepack);
+		mOSName = (TextView) findViewById(R.id.serverinfoactivity_windowsversion);
+		mOSVersion = (TextView) findViewById(R.id.serverinfoactivity_servicepack);
 		mUptime = (TextView) findViewById(R.id.serverinfoactivity_uptime);
+		mCPUUsage = (TextView) findViewById(R.id.serverinfoactivity_CPUusage);
+		mRAMUsage = (TextView) findViewById(R.id.serverinfoactivity_RAMusage);
+		mHDDUsage = (TextView) findViewById(R.id.serverinfoactivity_HDDusage);
 		mPieChart = (PieChartView) findViewById(R.id.stats_piechart);
 		mPieChart2 = (SmallPieChartView) findViewById(R.id.stats_piechart2);
 		mPieChart3 = (SmallPieChartView) findViewById(R.id.stats_piechart3);
+		mProgressBar = (ProgressBar) findViewById(R.id.serverinfoactivity_progressbar);
 
-		//updateData();
 		pubnub();
 	}
 
@@ -104,12 +119,25 @@ public class ServerInfoActivity extends Activity {
 				}
 
 				@Override
-				public void successCallback(String channel, Object message) {
+				public void successCallback(String channel, final Object message) {
 					Runnable runnable = new Runnable() {
 						@Override
 						public void run() {
-							//mServerName.setText("dddsdsdds");
-							new GetPulse().execute();
+							try {
+
+								JSONObject obj= new JSONObject(message.toString());
+								try {
+									latestPulse = new Pulse(obj.getInt(JSON_ID), obj.getInt(JSON_SERVERID), obj.getInt(JSON_RAMUSAGE), obj.getInt(JSON_CPUUSAGE), obj.getInt(JSON_HDDUSAGE), obj.getInt(JSON_UPTIME), obj.getInt(JSON_TIMESTAMP));
+									mUptime.setText("Uptime: " + latestPulse.getUptime());
+									mPieChart.setData(latestPulse.getCPUUsage());
+									mPieChart2.setData(latestPulse.getRAMUsage());
+									mPieChart3.setData(latestPulse.getHDDUsage());
+								} catch (NumberFormatException e) {
+									Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
+								}
+							} catch (JSONException e) {
+								e.printStackTrace();
+							}
 						}
 					};
 					mHandler.post(runnable);
@@ -130,7 +158,9 @@ public class ServerInfoActivity extends Activity {
 		}
 	}
 
-	public class GetPulse extends AsyncTask<Void, Void, Void> {
+	public class LoadServerInfo extends AsyncTask<Void, Void, Void> {
+		boolean success;
+
 		@Override
 		protected void onPreExecute() {
 			runOnUiThread(new Runnable() {  
@@ -138,63 +168,87 @@ public class ServerInfoActivity extends Activity {
 				public void run() {
 					//hide views until the JSON has been parsed
 					mServerName.setVisibility(View.GONE);
-					mWindowsVersion.setVisibility(View.GONE);
-					mServicePack.setVisibility(View.GONE);
+					mOSName.setVisibility(View.GONE);
+					mOSVersion.setVisibility(View.GONE);
 					mUptime.setVisibility(View.GONE);
-
+					mCPUUsage.setVisibility(View.GONE);
+					mRAMUsage.setVisibility(View.GONE);
+					mHDDUsage.setVisibility(View.GONE);
 					mPieChart.setVisibility(View.GONE);
 					mPieChart2.setVisibility(View.GONE);
 					mPieChart3.setVisibility(View.GONE);
-					Log.e("onPreExecute", "aaa");
+					mProgressBar.setVisibility(View.VISIBLE);
 				}
 			});
 		}
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			//parse the latest Pulse update
 			try {
-				// Creating service handler class instance
+				//creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
-
-				// Making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET);
-
+				//making a request to url and getting response
+				String jsonStr = jsonHandler.makeServiceCall(pulseURL, JSONServiceHandler.GET);
 				Log.d("Latest Pulse: ", "> " + jsonStr);
-
 				if (jsonStr != null) {
 					try {
-						//JSONArray jsonArr = new JSONArray(jsonStr);
-
-						//for(int i=0; i<jsonArr.length(); i++)
-						//{
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
 							latestPulse = new Pulse(obj.getInt(JSON_ID), obj.getInt(JSON_SERVERID), obj.getInt(JSON_RAMUSAGE), obj.getInt(JSON_CPUUSAGE), obj.getInt(JSON_HDDUSAGE), obj.getInt(JSON_UPTIME), obj.getInt(JSON_TIMESTAMP));
 						} catch (NumberFormatException e) {
 							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
 						}
-						//}
 					} catch (JSONException e) {
 						e.printStackTrace();
 					}
 				} else {
 					Log.e("ServiceHandler", "Couldn't get any data from the url");
 				}
-				//return null;
 			} catch (Exception e) {
-				//return e;
+
+			}
+
+			//parse the server information
+			try {
+				//creating service handler class instance
+				JSONServiceHandler jsonHandler = new JSONServiceHandler();
+				//making a request to url and getting response
+				String jsonStr = jsonHandler.makeServiceCall(serverURL, JSONServiceHandler.GET);
+				Log.d("Server Info: ", "> " + jsonStr);
+				if (jsonStr != null) {
+					try {
+						JSONObject obj= new JSONObject(jsonStr);
+						try {
+							server = new Server(obj.getInt(JSON_ID), obj.getString(JSON_DESCRIPTION), obj.getString(JSON_OS_NAME), obj.getString(JSON_OS_VERSION));
+						} catch (NumberFormatException e) {
+							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					Log.e("ServiceHandler", "Couldn't get any data from the url");
+				}
+			} catch (Exception e) {
+
 			}
 
 			runOnUiThread(new Runnable() {  
 				@Override
 				public void run() {
-					mServerName.setText("aaaa");
-					mWindowsVersion.setText("blaaaaaag");
-					mServicePack.setText("blaah");
-					mUptime.setText("Uptime: " + latestPulse.getUptime());
-					mPieChart.setData(latestPulse.getCPUUsage());
-					mPieChart2.setData(latestPulse.getRAMUsage());
-					mPieChart3.setData(latestPulse.getHDDUsage());
+					mServerName.setText(server.getServerName());
+					mOSName.setText(server.getServerWindowsVersion());
+					mOSVersion.setText("OS Version: " + server.getServicePack());
+					try {
+						mUptime.setText("Uptime: " + latestPulse.getUptime());
+						mPieChart.setData(latestPulse.getCPUUsage());
+						mPieChart2.setData(latestPulse.getRAMUsage());
+						mPieChart3.setData(latestPulse.getHDDUsage());
+					} catch (NullPointerException e) {
+						mServerName.setText("No pulse data available!");
+						success = false;
+					}
 				}
 			});
 			return null;
@@ -205,17 +259,24 @@ public class ServerInfoActivity extends Activity {
 			runOnUiThread(new Runnable() {  
 				@Override
 				public void run() {
-					mServerName.setVisibility(View.VISIBLE);
-					mWindowsVersion.setVisibility(View.VISIBLE);
-					mServicePack.setVisibility(View.VISIBLE);
-					mUptime.setVisibility(View.VISIBLE);
-					mPieChart.setVisibility(View.VISIBLE);
-					mPieChart2.setVisibility(View.VISIBLE);
-					mPieChart3.setVisibility(View.VISIBLE);
+					if (success != false) {
+						mProgressBar.setVisibility(View.GONE);
+						mServerName.setVisibility(View.VISIBLE);
+						mOSName.setVisibility(View.VISIBLE);
+						mOSVersion.setVisibility(View.VISIBLE);
+						mUptime.setVisibility(View.VISIBLE);
+						mPieChart.setVisibility(View.VISIBLE);
+						mPieChart2.setVisibility(View.VISIBLE);
+						mPieChart3.setVisibility(View.VISIBLE);
+					} else {
+						mProgressBar.setVisibility(View.GONE);
+						mServerName.setVisibility(View.VISIBLE);
+					}
 				}
 			});
 		}
 	}
+
 
 
 }

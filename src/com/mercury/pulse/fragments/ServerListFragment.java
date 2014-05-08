@@ -35,7 +35,7 @@ import com.mercury.pulse.objects.Server;
 public class ServerListFragment extends Fragment implements OnItemClickListener {
 
 	//API URL to parse our JSON list of servers from
-	private static String url = "http://cadence-bu.cloudapp.net/cadence/servers";
+	private static String url = "http://cadence-bu.cloudapp.net/servers";
 	//JSON Node names
 	private static final String JSON_ID = "id";
 	private static final String JSON_DESCRIPTION = "description";
@@ -142,7 +142,8 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 				exception.printStackTrace();
 			} else {
 				if (mServerList == null || mServerList.size() < 1) {
-					mTextView.setVisibility(TextView.VISIBLE);
+					mTextView.setVisibility(View.VISIBLE);
+					mTextView.setText("Authentication Failed!");
 					Log.i("ServerListFragment", "Server ArrayList empty");
 				} else {
 					try {

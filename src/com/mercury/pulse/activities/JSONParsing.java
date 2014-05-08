@@ -2,8 +2,6 @@ package com.mercury.pulse.activities;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,14 +9,9 @@ import org.json.JSONObject;
 import com.mercury.pulse.objects.JSONServiceHandler;
 
 import android.app.ListActivity;
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ListAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 public class JSONParsing extends ListActivity {
 
@@ -37,8 +30,6 @@ public class JSONParsing extends ListActivity {
 		//setContentView(R.layout.activity_main);
 
 		contactList = new ArrayList<HashMap<String, String>>();
-
-		ListView lv = getListView();
 
 		// Calling async task to get json
 		new GetServers().execute();
