@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.pulse.R;
 import com.mercury.pulse.activities.ServerInfoActivity;
 import com.mercury.pulse.adapters.ServerListAdapter;
+import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Server;
 
@@ -39,8 +40,10 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 	//JSON Node names
 	private static final String JSON_ID = "id";
 	private static final String JSON_NAME = "name";
-	// Hashmap for ListView
+	//hashmap for ListView
 	ArrayList<HashMap<String, String>> serverList;
+	//create a preferences handler
+	private PreferencesHandler preferencesHandler = new PreferencesHandler();
 
 	private ProgressBar							mProgressBar;
 	private TextView							mTextView;
@@ -102,7 +105,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 
 				// Making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET);
+				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET, preferencesHandler.loadPreference(getActivity(), "username"), preferencesHandler.loadPreference(getActivity(), "password"));
 
 				Log.d("Response: ", "> " + jsonStr);
 

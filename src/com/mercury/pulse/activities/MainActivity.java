@@ -71,10 +71,11 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		//populate navdrawer
 		mNavDrawerItems = new ArrayList<NavDrawerListItem>();
+		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_qr, "Scan QR Code"));
 		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Talbot Site"));
 		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Lansdowne Site"));
 		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Jurassic Site"));
-		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Weymouth Site"));
+		mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_person, "Weymouth Site"));		
 
 		//set navdrawer adapter
 		mNavDrawerList.setAdapter(new NavDrawerListAdapter(this, R.layout.activity_main_navdraweritem, mNavDrawerItems));
@@ -114,10 +115,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	 */
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		if (arg2 == 0) {
-			Toast.makeText(getApplicationContext(), "navdrawer item 1",
-					Toast.LENGTH_LONG).show();
+			Intent i = new Intent(getBaseContext(), QRCodeActivity.class);                      
+			startActivity(i);
 		} else if (arg2 == 1) {
 			Toast.makeText(getApplicationContext(), "navdrawer item 2",
+					Toast.LENGTH_LONG).show();
+		} else if (arg2 == 2) {
+			Toast.makeText(getApplicationContext(), "navdrawer item 3",
 					Toast.LENGTH_LONG).show();
 		} else {
 			//fail

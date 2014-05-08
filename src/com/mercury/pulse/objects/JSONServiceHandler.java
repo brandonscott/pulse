@@ -33,8 +33,8 @@ public class JSONServiceHandler {
 	 * @url - url to make request
 	 * @method - http request method
 	 * */
-	public String makeServiceCall(String url, int method) {
-		return this.makeServiceCall(url, method, null);
+	public String makeServiceCall(String url, int method, String username, String password) {
+		return this.makeServiceCall(url, method, null, username, password);
 	}
 
 	/*
@@ -44,7 +44,7 @@ public class JSONServiceHandler {
 	 * @params - http request params
 	 * */
 	public String makeServiceCall(String url, int method,
-			List<NameValuePair> params) {
+			List<NameValuePair> params, String username, String password) {
 		try {
 			// http client
 			DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -69,7 +69,7 @@ public class JSONServiceHandler {
 					url += "?" + paramString;
 				}
 				HttpUriRequest httpGet = new HttpGet(url);
-				String credentials = "brandon@brandonscott.co.uk" + ":" + "Cadenc3!";
+				String credentials = username + ":" + password;
 				String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 				httpGet.addHeader("Authorization", "Basic " + base64EncodedCredentials);
 

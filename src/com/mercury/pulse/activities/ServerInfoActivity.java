@@ -4,15 +4,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
+import android.view.Display;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.pulse.R;
+import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Pulse;
 import com.mercury.pulse.objects.Server;
@@ -50,8 +52,8 @@ public class ServerInfoActivity extends Activity {
 	private PieChartView mPieChart;
 	private SmallPieChartView mPieChart2, mPieChart3;
 	private ProgressBar mProgressBar;
-	//create Handler for UI thread updating
-	Handler mHandler = new Handler();
+	//create a preferences handler
+	private PreferencesHandler preferencesHandler = new PreferencesHandler();
 
 	private Pubnub pubnub = new Pubnub("pub-c-18bc7bd1-2981-4cc4-9c4e-234d25519d36", "sub-c-5782df52-d147-11e3-93dd-02ee2ddab7fe");
 
@@ -131,7 +133,6 @@ public class ServerInfoActivity extends Activity {
 									mPieChart.setData(latestPulse.getCPUUsage());
 									mPieChart2.setData(latestPulse.getRAMUsage());
 									mPieChart3.setData(latestPulse.getHDDUsage());
-									
 								} catch (NumberFormatException e) {
 									Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
 								}
@@ -140,7 +141,7 @@ public class ServerInfoActivity extends Activity {
 							}
 						}
 					});
-					
+
 					System.out.println("SUBSCRIBE : " + channel + " : "
 							+ message.getClass() + " : " + message.toString());
 				}
@@ -158,8 +159,6 @@ public class ServerInfoActivity extends Activity {
 	}
 
 	public class LoadServerInfo extends AsyncTask<Void, Void, Void> {
-		boolean success = true;
-
 		@Override
 		protected void onPreExecute() {
 			runOnUiThread(new Runnable() {  
@@ -188,7 +187,7 @@ public class ServerInfoActivity extends Activity {
 				//creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 				//making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(pulseURL, JSONServiceHandler.GET);
+				String jsonStr = jsonHandler.makeServiceCall(pulseURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 				Log.d("Latest Pulse: ", "> " + jsonStr);
 				if (jsonStr != null) {
 					try {
@@ -213,7 +212,7 @@ public class ServerInfoActivity extends Activity {
 				//creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 				//making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(serverURL, JSONServiceHandler.GET);
+				String jsonStr = jsonHandler.makeServiceCall(serverURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 				Log.d("Server Info: ", "> " + jsonStr);
 				if (jsonStr != null) {
 					try {
@@ -239,15 +238,10 @@ public class ServerInfoActivity extends Activity {
 					mServerName.setText(server.getServerName());
 					mOSName.setText(server.getServerWindowsVersion());
 					mOSVersion.setText("OS Version: " + server.getServicePack());
-					try {
-						mUptime.setText("Uptime: " + latestPulse.getUptime());
-						mPieChart.setData(latestPulse.getCPUUsage());
-						mPieChart2.setData(latestPulse.getRAMUsage());
-						mPieChart3.setData(latestPulse.getHDDUsage());
-					} catch (NullPointerException e) {
-						mServerName.setText("No pulse data available!");
-						success = false;
-					}
+					mUptime.setText("Uptime: " + latestPulse.getUptime());
+					mPieChart.setData(latestPulse.getCPUUsage());
+					mPieChart2.setData(latestPulse.getRAMUsage());
+					mPieChart3.setData(latestPulse.getHDDUsage());
 				}
 			});
 			return null;
@@ -264,17 +258,35 @@ public class ServerInfoActivity extends Activity {
 					mOSVersion.setVisibility(View.VISIBLE);
 					mServerName.setVisibility(View.VISIBLE);
 					mUptime.setVisibility(View.VISIBLE);
+
+					//scale piecharts to fit screen sizes nicely
+					Log.e("getScreenWidth()", getScreenWidth()+"");
+					Log.e("getScreenHeight()", getScreenHeight()+"");
+
+					int screenSection = getScreenWidth()/6;
+
+
+					//mPieChart.setScaleX(screenSection);
+					//mPieChart.setScaleY(screenSection);
 					mPieChart.setVisibility(View.VISIBLE);
 					mPieChart2.setVisibility(View.VISIBLE);
 					mPieChart3.setVisibility(View.VISIBLE);
-					
-					if (success == false) {
-						mOSName.setVisibility(View.GONE);
-						mOSVersion.setVisibility(View.GONE);
-						mUptime.setVisibility(View.GONE);
-					}
 				}
 			});
+		}
+
+		private int getScreenWidth() {
+			Display display = getWindowManager().getDefaultDisplay();
+			Point size = new Point();
+			display.getSize(size);
+			return (size.x);
+		}
+
+		private int getScreenHeight() {
+			Display display = getWindowManager().getDefaultDisplay();
+			Point size = new Point();
+			display.getSize(size);
+			return (size.y);
 		}
 	}
 
