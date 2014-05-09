@@ -10,12 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-<<<<<<< HEAD
 import android.view.View.OnClickListener;
-=======
 import android.widget.ProgressBar;
 import android.widget.TextView;
->>>>>>> feature/jsonparsing
 
 import com.example.pulse.R;
 import com.mercury.pulse.objects.JSONServiceHandler;
@@ -28,14 +25,7 @@ import com.pubnub.api.Pubnub;
 import com.pubnub.api.PubnubError;
 import com.pubnub.api.PubnubException;
 
-<<<<<<< HEAD
-public class ServerInfoActivity extends Activity implements OnClickListener {
-	
-	private PieChartView					mPieChart;
-	private SmallPieChartView 			mPieChart2, mPieChart3;
-	
-=======
-public class ServerInfoActivity extends Activity {
+public class ServerInfoActivity extends Activity implements OnClickListener{
 
 	//API URL to parse our JSON list of servers from
 	private String pulseURL, serverURL;
@@ -67,7 +57,6 @@ public class ServerInfoActivity extends Activity {
 
 	private Pubnub pubnub = new Pubnub("pub-c-18bc7bd1-2981-4cc4-9c4e-234d25519d36", "sub-c-5782df52-d147-11e3-93dd-02ee2ddab7fe");
 
->>>>>>> feature/jsonparsing
 	@Override
 	/**
 	 * override onCreate to provide out layout file and execute init()
@@ -103,11 +92,8 @@ public class ServerInfoActivity extends Activity {
 		mPieChart2 = (SmallPieChartView) findViewById(R.id.stats_piechart2);
 		mPieChart2.setOnClickListener(this);
 		mPieChart3 = (SmallPieChartView) findViewById(R.id.stats_piechart3);
-<<<<<<< HEAD
 		mPieChart3.setOnClickListener(this);
-=======
 		mProgressBar = (ProgressBar) findViewById(R.id.serverinfoactivity_progressbar);
->>>>>>> feature/jsonparsing
 
 		pubnub();
 	}
@@ -300,6 +286,7 @@ public class ServerInfoActivity extends Activity {
 	@Override
 	public void onClick(View v) {
 		Intent i = new Intent(this, GraphActivity.class);
+		Bundle b = new Bundle();
 		String title = "test";
 		switch (v.getId()) {
 		case R.id.stats_piechart:
@@ -312,7 +299,9 @@ public class ServerInfoActivity extends Activity {
 			title = "HDD";
 			break;
 		}
-		i.putExtra("title", title);
+		b.putString("title", title);
+		b.putInt("SERVERID", SERVERID);
+		i.putExtras(b);
 		startActivity(i);
 		
 	}

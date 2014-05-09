@@ -17,6 +17,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
 
 import android.util.Base64;
+import android.util.Log;
 
 public class JSONServiceHandler {
 
@@ -72,6 +73,7 @@ public class JSONServiceHandler {
 				String credentials = "brandon@brandonscott.co.uk" + ":" + "Cadenc3!";
 				String base64EncodedCredentials = Base64.encodeToString(credentials.getBytes(), Base64.NO_WRAP);
 				httpGet.addHeader("Authorization", "Basic " + base64EncodedCredentials);
+				Log.d("URL", url);
 
 				httpResponse = httpClient.execute(httpGet);
 

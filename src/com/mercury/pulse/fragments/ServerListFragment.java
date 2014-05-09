@@ -28,10 +28,7 @@ import android.widget.Toast;
 import com.example.pulse.R;
 import com.mercury.pulse.activities.ServerInfoActivity;
 import com.mercury.pulse.adapters.ServerListAdapter;
-<<<<<<< HEAD
-=======
 import com.mercury.pulse.objects.JSONServiceHandler;
->>>>>>> feature/jsonparsing
 import com.mercury.pulse.objects.Server;
 
 
