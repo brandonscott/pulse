@@ -85,7 +85,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 		super.onStart();
 
 		//call async task to get json
-		new GetServers().execute();
+		//new GetServers().execute();
 	}
 	
 	public void setServerGroupID(int serverGroupID) {

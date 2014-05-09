@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -43,12 +44,13 @@ public class ServerInfoActivity extends Activity {
 	private static final String JSON_SERVERNAME = "name";
 	private static final String JSON_OS_NAME = "os_name";
 	private static final String JSON_OS_VERSION = "os_version";
+	private static final String JSON_ONLINE = "online";
 	//define a pulse object for the latest pulse
 	private Pulse latestPulse;
 	//define a server object to model the server
 	private Server server;
 	//define views
-	private TextView mServerName, mOSName, mOSVersion, mUptime, mCPUUsage, mRAMUsage, mHDDUsage;
+	private TextView mServerName, mOSName, mOSVersion, mUptime, mCPUUsage, mRAMUsage, mHDDUsage, mOnline;
 	private PieChartView mPieChart;
 	private SmallPieChartView mPieChart2, mPieChart3;
 	private ProgressBar mProgressBar;
@@ -87,6 +89,7 @@ public class ServerInfoActivity extends Activity {
 		mCPUUsage = (TextView) findViewById(R.id.serverinfoactivity_CPUusage);
 		mRAMUsage = (TextView) findViewById(R.id.serverinfoactivity_RAMusage);
 		mHDDUsage = (TextView) findViewById(R.id.serverinfoactivity_HDDusage);
+		mOnline = (TextView) findViewById(R.id.serverinfoactivity_online);
 		mPieChart = (PieChartView) findViewById(R.id.stats_piechart);
 		mPieChart2 = (SmallPieChartView) findViewById(R.id.stats_piechart2);
 		mPieChart3 = (SmallPieChartView) findViewById(R.id.stats_piechart3);
@@ -97,7 +100,7 @@ public class ServerInfoActivity extends Activity {
 
 	public void pubnub() {
 		try {
-			pubnub.subscribe("pulses", new Callback() {
+			pubnub.subscribe(new String[]{"pulses-"+SERVERID, "pulses-"+SERVERID+"-online", "test"}, new Callback() {
 
 				@Override
 				public void connectCallback(String channel, Object message) {
@@ -121,29 +124,54 @@ public class ServerInfoActivity extends Activity {
 
 				@Override
 				public void successCallback(String channel, final Object message) {
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							try {
-								try {
-									System.out.println("baaah");
-									latestPulse = new Pulse(((JSONObject) message).getInt(JSON_ID), ((JSONObject) message).getInt(JSON_SERVERID), ((JSONObject) message).getInt(JSON_RAMUSAGE), ((JSONObject) message).getInt(JSON_CPUUSAGE), ((JSONObject) message).getInt(JSON_HDDUSAGE), ((JSONObject) message).getInt(JSON_UPTIME), ((JSONObject) message).getInt(JSON_TIMESTAMP));
-									mUptime.setText("Uptime: " + latestPulse.getUptime());
-									System.out.println(latestPulse.getCPUUsage());
-									mPieChart.setData(latestPulse.getCPUUsage());
-									mPieChart2.setData(latestPulse.getRAMUsage());
-									mPieChart3.setData(latestPulse.getHDDUsage());
-								} catch (NumberFormatException e) {
-									Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
-								}
-							} catch (JSONException e) {
-								e.printStackTrace();
-							}
-						}
-					});
-
 					System.out.println("SUBSCRIBE : " + channel + " : "
 							+ message.getClass() + " : " + message.toString());
+					if (channel.equals("pulses-"+SERVERID)) {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									try {
+										//System.out.println("baaah");
+										latestPulse = new Pulse(((JSONObject) message).getInt(JSON_ID), ((JSONObject) message).getInt(JSON_SERVERID), ((JSONObject) message).getInt(JSON_RAMUSAGE), ((JSONObject) message).getInt(JSON_CPUUSAGE), ((JSONObject) message).getInt(JSON_HDDUSAGE), ((JSONObject) message).getInt(JSON_UPTIME), ((JSONObject) message).getInt(JSON_TIMESTAMP));
+										mUptime.setText("Uptime: " + latestPulse.getUptime());
+										//System.out.println(latestPulse.getCPUUsage());
+										mPieChart.setData(latestPulse.getCPUUsage());
+										mPieChart2.setData(latestPulse.getRAMUsage());
+										mPieChart3.setData(latestPulse.getHDDUsage());
+									} catch (NumberFormatException e) {
+										Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
+									}
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+						});
+					} else if (channel.equals("pulses-"+SERVERID+"-online")) {
+						runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								try {
+									try {
+										JSONObject jsonObj = new JSONObject(message.toString());
+										if (jsonObj.getInt("online") == 1) {
+											mOnline.setText("Online");
+											mOnline.setTextColor(Color.parseColor("#99CC00"));
+										} else {
+											mOnline.setText("Offline");
+											mOnline.setTextColor(Color.parseColor("#FF4444"));
+										}
+									} catch (NumberFormatException e) {
+										Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
+									}
+								} catch (JSONException e) {
+									e.printStackTrace();
+								}
+							}
+						});
+					}
+
+					
 				}
 
 				@Override
@@ -159,6 +187,8 @@ public class ServerInfoActivity extends Activity {
 	}
 
 	public class LoadServerInfo extends AsyncTask<Void, Void, Void> {
+		boolean fail = false;
+
 		@Override
 		protected void onPreExecute() {
 			runOnUiThread(new Runnable() {  
@@ -172,6 +202,7 @@ public class ServerInfoActivity extends Activity {
 					mCPUUsage.setVisibility(View.GONE);
 					mRAMUsage.setVisibility(View.GONE);
 					mHDDUsage.setVisibility(View.GONE);
+					mOnline.setVisibility(View.GONE);
 					mPieChart.setVisibility(View.GONE);
 					mPieChart2.setVisibility(View.GONE);
 					mPieChart3.setVisibility(View.GONE);
@@ -193,6 +224,10 @@ public class ServerInfoActivity extends Activity {
 					try {
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
+							if (jsonStr.length() <= 4) {
+								fail = false;
+								return null;
+							}
 							latestPulse = new Pulse(obj.getInt(JSON_ID), obj.getInt(JSON_SERVERID), obj.getInt(JSON_RAMUSAGE), obj.getInt(JSON_CPUUSAGE), obj.getInt(JSON_HDDUSAGE), obj.getInt(JSON_UPTIME), obj.getInt(JSON_TIMESTAMP));
 						} catch (NumberFormatException e) {
 							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
@@ -218,7 +253,7 @@ public class ServerInfoActivity extends Activity {
 					try {
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
-							server = new Server(obj.getInt(JSON_ID), obj.getString(JSON_SERVERNAME), obj.getString(JSON_OS_NAME), obj.getString(JSON_OS_VERSION));
+							server = new Server(obj.getInt(JSON_ID), obj.getString(JSON_SERVERNAME), obj.getString(JSON_OS_NAME), obj.getString(JSON_OS_VERSION), obj.getInt(JSON_ONLINE));
 						} catch (NumberFormatException e) {
 							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
 						}
@@ -239,6 +274,13 @@ public class ServerInfoActivity extends Activity {
 					mOSName.setText(server.getServerWindowsVersion());
 					mOSVersion.setText("OS Version: " + server.getServicePack());
 					mUptime.setText("Uptime: " + latestPulse.getUptime());
+					if (server.isOnline() == 1) {
+						mOnline.setText("Online");
+						mOnline.setTextColor(Color.parseColor("#99CC00"));
+					} else {
+						mOnline.setText("Offline");
+						mOnline.setTextColor(Color.parseColor("#FF4444"));
+					}
 					mPieChart.setData(latestPulse.getCPUUsage());
 					mPieChart2.setData(latestPulse.getRAMUsage());
 					mPieChart3.setData(latestPulse.getHDDUsage());
@@ -252,25 +294,33 @@ public class ServerInfoActivity extends Activity {
 			runOnUiThread(new Runnable() {  
 				@Override
 				public void run() {
-					mProgressBar.setVisibility(View.GONE);
-					mServerName.setVisibility(View.VISIBLE);
-					mOSName.setVisibility(View.VISIBLE);
-					mOSVersion.setVisibility(View.VISIBLE);
-					mServerName.setVisibility(View.VISIBLE);
-					mUptime.setVisibility(View.VISIBLE);
-
-					//scale piecharts to fit screen sizes nicely
-					Log.e("getScreenWidth()", getScreenWidth()+"");
-					Log.e("getScreenHeight()", getScreenHeight()+"");
-
-					int screenSection = getScreenWidth()/6;
-
-
-					//mPieChart.setScaleX(screenSection);
-					//mPieChart.setScaleY(screenSection);
-					mPieChart.setVisibility(View.VISIBLE);
-					mPieChart2.setVisibility(View.VISIBLE);
-					mPieChart3.setVisibility(View.VISIBLE);
+					if (fail == true) {
+						mProgressBar.setVisibility(View.GONE);
+						mServerName.setVisibility(View.VISIBLE);
+						mServerName.setText("No Pulse data available!");
+						mOSName.setVisibility(View.GONE);
+						mOSVersion.setVisibility(View.GONE);
+						mServerName.setVisibility(View.GONE);
+						mUptime.setVisibility(View.GONE);
+						mOnline.setVisibility(View.GONE);
+						mPieChart.setVisibility(View.GONE);
+						mPieChart2.setVisibility(View.GONE);
+						mPieChart3.setVisibility(View.GONE);
+					} else {
+						mProgressBar.setVisibility(View.GONE);
+						mServerName.setVisibility(View.VISIBLE);
+						mOSName.setVisibility(View.VISIBLE);
+						mOSVersion.setVisibility(View.VISIBLE);
+						mServerName.setVisibility(View.VISIBLE);
+						mCPUUsage.setVisibility(View.VISIBLE);
+						mRAMUsage.setVisibility(View.VISIBLE);
+						mHDDUsage.setVisibility(View.VISIBLE);
+						mUptime.setVisibility(View.VISIBLE);
+						mOnline.setVisibility(View.VISIBLE);
+						mPieChart.setVisibility(View.VISIBLE);
+						mPieChart2.setVisibility(View.VISIBLE);
+						mPieChart3.setVisibility(View.VISIBLE);
+					}
 				}
 			});
 		}
@@ -289,7 +339,5 @@ public class ServerInfoActivity extends Activity {
 			return (size.y);
 		}
 	}
-
-
 
 }

@@ -46,7 +46,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private int mFrameLayout = R.id.mainactivity_framelayout;
 	//API URL to parse our JSON list of servers from
 	private static String serverGroupURL = "http://cadence-bu.cloudapp.net/servergroups";
-	private static String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/servergroups";
 	//JSON servergroup Node names
 	private static final String JSON_SERVERGROUPID = "id";
 	private static final String JSON_SITENAME= "name";
@@ -178,6 +177,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	}
 
 	private class GetServerGroups extends AsyncTask<Void, Void, Exception> {
+		int defaultServerGroupID;
+		
 		@Override
 		protected void onPreExecute() {
 
@@ -185,12 +186,41 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		@Override
 		protected Exception doInBackground(Void... params) {
+			//grab the default server group
+			try {
+				//creating service handler class instance
+				JSONServiceHandler jsonHandler = new JSONServiceHandler();
+				//build url
+				String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/users/" + preferencesHandler.loadPreference(getApplicationContext(), "userid") + "/servergroups/default";
+				
+				//making a request to url and getting response
+				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET,  preferencesHandler.loadPreference(getApplicationContext(), "username"),  preferencesHandler.loadPreference(getApplicationContext(), "password"));
+				Log.d("Latest Pulse: ", "> " + jsonStr);
+				if (jsonStr != null) {
+					try {
+						JSONObject obj = new JSONObject(jsonStr);
+						try {
+							defaultServerGroupID = obj.getInt(JSON_SERVERGROUPID);
+						} catch (Exception e) {
+							Log.e("GetServerGroups()", "failed to parse JSON");
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+				} else {
+					Log.e("ServiceHandler", "Couldn't get any data from the url");
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			//grab a list of server groups to use in the nav drawer
 			try {
 				// Creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 
 				// Making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
+				String jsonStr = jsonHandler.makeServiceCall(serverGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 
 				Log.d("Response: ", "> " + jsonStr);
 
@@ -224,6 +254,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		@Override
 		protected void onPostExecute(Exception exception) {
 			Log.e("222", ((ServerGroup) mNavDrawerItems.get(0)).getServerGroupName());
+			((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(defaultServerGroupID).getServerGroupID());
+			mActionBar.setTitle(mNavDrawerItems.get(defaultServerGroupID).getServerGroupName());
 			mNavDrawerList.setAdapter(new NavDrawerListAdapter(getApplicationContext(), R.layout.activity_main_navdraweritem, mNavDrawerItems));
 		}
 	}
