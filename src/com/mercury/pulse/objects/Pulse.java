@@ -16,9 +16,9 @@ public class Pulse {
 		super();
 		this.pulseID = pulseID;
 		this.serverID = serverID;
-		this.ram_usage = ram_usage;
-		this.cpu_usage = cpu_usage;
-		this.disk_usage = disk_usage;
+		this.ram_usage = ram_usage * 100;
+		this.cpu_usage = cpu_usage * 100;
+		this.disk_usage = disk_usage * 100;
 		this.uptime = uptime;
 		this.timestamp = timestamp;
 	}

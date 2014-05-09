@@ -45,7 +45,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private Fragment mServerListFragment;
 	private int mFrameLayout = R.id.mainactivity_framelayout;
 	//API URL to parse our JSON list of servers from
-	private static String url = "http://cadence-bu.cloudapp.net/servergroups";
+	private static String serverGroupURL = "http://cadence-bu.cloudapp.net/servergroups";
+	private static String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/servergroups";
 	//JSON servergroup Node names
 	private static final String JSON_SERVERGROUPID = "id";
 	private static final String JSON_SITENAME= "name";
@@ -189,7 +190,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 
 				// Making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
+				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 
 				Log.d("Response: ", "> " + jsonStr);
 
@@ -217,6 +218,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			} catch (Exception e) {
 				return e;
 			}
+			
 		}
 
 		@Override

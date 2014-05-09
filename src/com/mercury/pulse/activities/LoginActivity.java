@@ -23,7 +23,7 @@ public class LoginActivity extends Activity {
 	//API URL to parse our JSON list of servers from
 	private String loginURL = "http://cadence-bu.cloudapp.net/auth";
 	//JSON Pulse Node names
-	private static final String JSON_SUCCESS = "success";
+	private static final String JSON_USERID = "id";
 	//define some instance variables
 	private TextView mUsername, mPassword, mLoginStatus;
 	private Button mSignIn;
@@ -35,7 +35,9 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		
+
+		//ewww saving password in sharedPreferences ***I FEEL DIRTY***
+		preferencesHandler.savePreference(this, "userid", null);
 		preferencesHandler.savePreference(this, "username", null);
 		preferencesHandler.savePreference(this, "password", null);
 	}
@@ -45,6 +47,7 @@ public class LoginActivity extends Activity {
 	}
 
 	public class LoginAuth extends AsyncTask<Void, Void, Void> {
+		private boolean loginSuccess = false;
 		@Override
 		protected void onPreExecute() {
 			mUsername = (TextView) findViewById (R.id.email);
@@ -52,7 +55,7 @@ public class LoginActivity extends Activity {
 			mLoginStatus = (TextView) findViewById (R.id.loginstatus);
 			mSpinner = (ProgressBar) findViewById (R.id.loginactivity_progressbar);
 			mSignIn = (Button) findViewById (R.id.sign_in_button);
-			
+
 			mSpinner.setVisibility(View.VISIBLE);
 			mSignIn.setEnabled(false);
 			mLoginStatus.setText("Logging In...");
@@ -60,7 +63,7 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			
+
 			//parse the latest Pulse update
 			try {
 				//creating service handler class instance
@@ -72,18 +75,15 @@ public class LoginActivity extends Activity {
 					try {
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
-							if (obj.getBoolean(JSON_SUCCESS) == true) {
+							if (obj.getInt(JSON_USERID) != 0) {
+								loginSuccess = true;
+								preferencesHandler.savePreference(getApplicationContext(), "userid", obj.getInt(JSON_USERID));
 								preferencesHandler.savePreference(getApplicationContext(), "username", mUsername.getText().toString());
 								preferencesHandler.savePreference(getApplicationContext(), "password", mPassword.getText().toString());
-								
+
 								Intent i = new Intent(getBaseContext(), MainActivity.class);                      
 								startActivity(i);
 								finish();
-							} else {
-								mSpinner.setVisibility(View.INVISIBLE);
-								mSignIn.setEnabled(true);
-								mLoginStatus.setText("");
-								Toast.makeText(getApplicationContext(), "Login Incorrect", Toast.LENGTH_LONG).show();
 							}
 						} catch (Exception e) {
 							Log.e("LoginAuth", "Parsing login auth JSON failed");
@@ -102,7 +102,13 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected void onPostExecute(Void no) {
-			
+			if (loginSuccess != true) {
+				mSpinner.setVisibility(View.INVISIBLE);
+				mSignIn.setEnabled(true);
+				mLoginStatus.setText("");
+				mPassword.requestFocus();
+				Toast.makeText(getApplicationContext(), "Login Incorrect", Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 }

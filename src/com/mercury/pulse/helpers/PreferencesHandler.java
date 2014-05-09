@@ -14,10 +14,16 @@ public class PreferencesHandler {
 		editor.commit();
 	}
 	
+	public void savePreference(Context context, String key, int data) {
+		SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		Editor editor = mSharedPreferences.edit();
+		editor.putInt(key, data);
+		editor.commit();
+	}
+	
 	public String loadPreference(Context context, String key) {
 		SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
 		return mSharedPreferences.getString(key, null);
-		
 	}
 	
 }
