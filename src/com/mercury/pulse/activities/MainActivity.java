@@ -194,7 +194,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/users/" + preferencesHandler.loadPreference(getApplicationContext(), "userid") + "/servergroups/default";
 				
 				//making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET,  preferencesHandler.loadPreference(getApplicationContext(), "username"),  preferencesHandler.loadPreference(getApplicationContext(), "password"));
+				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 				Log.d("Latest Pulse: ", "> " + jsonStr);
 				if (jsonStr != null) {
 					try {
