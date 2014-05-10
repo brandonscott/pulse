@@ -43,12 +43,6 @@ public class JSONParsing extends ListActivity {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			// Showing progress dialog
-			/*pDialog = new ProgressDialog(MainActivity.this);
-			pDialog.setMessage("Please wait...");
-			pDialog.setCancelable(false);
-			pDialog.show();*/
-
 		}
 
 		@Override
@@ -57,7 +51,7 @@ public class JSONParsing extends ListActivity {
 			JSONServiceHandler sh = new JSONServiceHandler();
 
 			// Making a request to url and getting response
-			String jsonStr = sh.makeServiceCall(url, JSONServiceHandler.GET);
+			String jsonStr = sh.makeServiceCall(url, JSONServiceHandler.GET, "brandon@brandonscott.co.uk", "Cadenc3!");
 
 			Log.d("Response: ", "> " + jsonStr);
 
@@ -85,19 +79,6 @@ public class JSONParsing extends ListActivity {
 		@Override
 		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
-			// Dismiss the progress dialog
-			//if (pDialog.isShowing())
-				//pDialog.dismiss();
-			/**
-			 * Updating parsed JSON data into ListView
-			 * */
-			/*ListAdapter adapter = new SimpleAdapter(
-					MainActivity.this, contactList,
-					R.layout.list_item, new String[] { TAG_NAME, TAG_EMAIL,
-							TAG_PHONE_MOBILE }, new int[] { R.id.name,
-							R.id.email, R.id.mobile });
-
-			setListAdapter(adapter);*/
 		}
 
 	}

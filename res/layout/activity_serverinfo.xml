@@ -13,8 +13,8 @@
 
     <com.mercury.pulse.views.PieChartView
         android:id="@+id/stats_piechart"
-        android:layout_width="225dp"
-        android:layout_height="225dp"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_margin="5dp" />
@@ -45,7 +45,7 @@
         android:layout_marginLeft="75dp"
         android:fontFamily="sans-serif-condensed"
         android:text="CPU Usage"
-        android:textColor="#000000"
+        android:textColor="#777"
         android:textSize="18sp"
         android:textStyle="italic" />
 
@@ -60,7 +60,7 @@
         android:layout_toRightOf="@+id/stats_piechart"
         android:fontFamily="sans-serif-condensed"
         android:text="RAM Usage"
-        android:textColor="#000000"
+        android:textColor="#777"
         android:textSize="18sp"
         android:textStyle="italic" />
 
@@ -72,7 +72,7 @@
         android:layout_alignLeft="@+id/serverinfoactivity_RAMusage"
         android:fontFamily="sans-serif-condensed"
         android:text="HDD Usage"
-        android:textColor="#000000"
+        android:textColor="#777"
         android:textSize="18sp"
         android:textStyle="italic" />
 
@@ -83,10 +83,19 @@
         android:layout_below="@+id/stats_piechart"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp"
-        android:text="Uptime: 14 minutes"
         android:textColor="#777"
         android:textSize="20sp"
         android:textStyle="italic" />
+
+    <TextView
+        android:id="@+id/serverinfoactivity_online"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/serverinfoactivity_uptime"
+        android:layout_centerHorizontal="true"
+        android:textColor="#777"
+        android:textSize="20sp"
+        android:textStyle="bold|italic" />
 
     <TextView
         android:id="@+id/serverinfoactivity_servername"

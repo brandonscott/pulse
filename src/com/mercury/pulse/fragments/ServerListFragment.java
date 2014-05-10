@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.example.pulse.R;
 import com.mercury.pulse.activities.ServerInfoActivity;
 import com.mercury.pulse.adapters.ServerListAdapter;
+import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Server;
 
@@ -35,19 +36,20 @@ import com.mercury.pulse.objects.Server;
 public class ServerListFragment extends Fragment implements OnItemClickListener {
 
 	//API URL to parse our JSON list of servers from
-	private static String url = "http://cadence-bu.cloudapp.net/servers";
+	private static String url = "http://cadence-bu.cloudapp.net/servergroups/";
 	//JSON Node names
 	private static final String JSON_ID = "id";
 	private static final String JSON_NAME = "name";
-	// Hashmap for ListView
+	//hashmap for ListView
 	ArrayList<HashMap<String, String>> serverList;
+	//create a preferences handler
+	private PreferencesHandler preferencesHandler = new PreferencesHandler();
 
 	private ProgressBar							mProgressBar;
 	private TextView							mTextView;
 	private GridView							mGridView;
 	private ArrayList<Server>					mServerList;
 	private ServerListAdapter					mServerListAdapter;
-
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,12 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 		super.onStart();
 
 		//call async task to get json
+		//new GetServers().execute();
+	}
+	
+	public void setServerGroupID(int serverGroupID) {
+		url = "http://cadence-bu.cloudapp.net/servergroups/" + serverGroupID + "/servers";
+		//url += "/" + serverGroupID + "/servers";
 		new GetServers().execute();
 	}
 
@@ -102,7 +110,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 
 				// Making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET);
+				String jsonStr = jsonHandler.makeServiceCall(url, JSONServiceHandler.GET, preferencesHandler.loadPreference(getActivity(), "username"), preferencesHandler.loadPreference(getActivity(), "password"));
 
 				Log.d("Response: ", "> " + jsonStr);
 
@@ -143,7 +151,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 			} else {
 				if (mServerList == null || mServerList.size() < 1) {
 					mTextView.setVisibility(View.VISIBLE);
-					mTextView.setText("Authentication Failed!");
+					mTextView.setText("Server Group Empty!");
 					Log.i("ServerListFragment", "Server ArrayList empty");
 				} else {
 					try {

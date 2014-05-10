@@ -18,7 +18,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.mercury.pulse.activities.MainActivity"
+            android:name="com.mercury.pulse.activities.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -44,6 +44,19 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.mercury.pulse.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.mercury.pulse.activities.QRCodeActivity"
+            android:label="About"
+            android:parentActivityName="com.mercury.pulse.activities.MainActivity"
+            android:screenOrientation="portrait" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.mercury.pulse.activities.MainActivity" />
+        </activity>
+        <activity
+            android:name="com.mercury.pulse.activities.MainActivity"
+            android:screenOrientation="portrait" >
         </activity>
     </application>
 

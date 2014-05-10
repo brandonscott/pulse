@@ -2,7 +2,7 @@ package com.mercury.pulse.objects;
 
 public class Server {
 
-	private int serverID;
+	private int serverID, online;
 	private String serverName, serverWindowsVersion, serverServicePack;
 	
 	public Server(int serverID, String serverName) {
@@ -11,12 +11,13 @@ public class Server {
 		this.serverName = serverName;
 	}
 	
-	public Server(int serverID, String serverName, String serverWindowsVersion, String serverServicePack) {
+	public Server(int serverID, String serverName, String serverWindowsVersion, String serverServicePack, int online) {
 		super();
 		this.serverID = serverID;
 		this.serverName = serverName;
 		this.serverWindowsVersion = serverWindowsVersion;
 		this.serverServicePack = serverServicePack;
+		this.online = online;
 	}
 	
 	public int getServerID() {
@@ -33,6 +34,10 @@ public class Server {
 	
 	public String getServicePack() {
 		return serverServicePack;
+	}
+	
+	public int isOnline() {
+		return online;
 	}
 	
 	public void setServerID(int serverID) {
