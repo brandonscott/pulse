@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:background="#efefef"
+    android:orientation="vertical"
+    android:padding="16dp" >
+
+    <ImageView
+        android:id="@+id/aboutfragment_aboutuscoverimage"
+        android:layout_width="fill_parent"
+        android:layout_height="140dp"
+        android:layout_gravity="center"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_launcher" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="5dp" />
+
+    <TextView
+        android:id="@+id/aboutfragment_abouttheapptitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="4dp"
+        android:layout_marginLeft="4dp"
+        android:text="About The App"
+        android:textColor="#777"
+        android:textSize="20sp"
+        android:textStyle="italic" />
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="10dp" />
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/textviewbackground"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/aboutfragment_abouttheapp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#fff"
+            android:fontFamily="sans-serif-light"
+            android:gravity="center"
+            android:padding="16dp"
+            android:singleLine="false"
+            android:text="Pulse is an advanced server monitoring solution, supporting live updates, logging, and alerting functionality. Pulse was created by Mercury Software Studios."
+            android:textColor="#222"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+</LinearLayout>

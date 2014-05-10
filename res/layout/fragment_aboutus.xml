@@ -1,0 +1,522 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    android:background="#efefef"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="2dp"
+                android:background="#2a8db1" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp" >
+
+                <ImageView
+                    android:id="@+id/aboutfragment_aboutuscoverimage"
+                    android:layout_width="fill_parent"
+                    android:layout_height="140dp"
+                    android:layout_gravity="center"
+                    android:paddingLeft="32dp"
+                    android:paddingRight="32dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/mercurysoftwaredevlarge" />
+
+                <TextView
+                    android:id="@+id/aboutfragment_abouttheapp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginLeft="4dp"
+                    android:text="About Us"
+                    android:textColor="#777"
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:layout_width="fill_parent"
+                    android:layout_height="10dp" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:id="@+id/aboutfragment_aboutus"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="#fff"
+                        android:fontFamily="sans-serif-light"
+                        android:padding="16dp"
+                        android:singleLine="false"
+                        android:text="Mercury Software Studios are a startup software development company based in Bournemouth. We offer bespoke application development, personalised application support, and advanced technical solutions to business problems."
+                        android:textColor="#222"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/meettheteam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:text="Meet The Team"
+                    android:textColor="#777"
+                    android:textSize="20sp"
+                    android:textStyle="italic" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_toRightOf="@+id/meettheteam"
+                    android:src="@drawable/curved_arrow" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="16dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/max" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Max Rycroft"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Project and Quality Manager"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout1"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/mat" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Mat Salamon"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Web Dashboard Front/Backend Development, Testing Team"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/nick" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Nick Tyrrell"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Web Dashboard Front/Backend Development, Testing Team"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout43"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/brandon" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Brandon Scott"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="API and Server Application Development Team"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout5"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout4"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/chris" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Chris Franklin"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="API and Server Application Development Team"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout6"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout5"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/nicka" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Nick Alderson"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Web Dashboard Front/Backend Development, Infrastructure Engineering"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout7"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayout6"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="15dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:orientation="vertical" >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/textviewbackground"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="10dp" >
+
+                    <com.mercury.pulse.views.RoundedImageView
+                        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_gravity="center_vertical|left"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/james" />
+
+                    <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:paddingTop="8dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="James Baldwin"
+                            android:textAppearance="?android:attr/textAppearanceLarge"
+                            android:textColor="#333"
+                            android:textSize="24dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="left|center_vertical"
+                            android:fontFamily="sans-serif-light"
+                            android:paddingLeft="16dp"
+                            android:text="Android Developer"
+                            android:textAppearance="?android:attr/textAppearanceSmall"
+                            android:textColor="#aaa"
+                            android:textSize="16dp"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
