@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pulse.R;
 import com.jjoe64.graphview.CustomLabelFormatter;
@@ -32,6 +33,7 @@ import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GraphView.GraphViewData;
 import com.jjoe64.graphview.GraphViewSeries;
 import com.jjoe64.graphview.LineGraphView;
+import com.mercury.pulse.helpers.ConnectionHelper;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.pubnub.api.Callback;
@@ -57,6 +59,7 @@ public class GraphActivity extends Activity {
 
 	//create a preferences handler
 	private PreferencesHandler preferencesHandler = new PreferencesHandler();
+	private ConnectionHelper connectionDetector = new ConnectionHelper(this);
 
 	//pulses JSONArray
 	JSONArray pulses = null;
@@ -141,8 +144,13 @@ public class GraphActivity extends Activity {
 		dateTimeFormatter = new SimpleDateFormat("dd-MM HH:mm", current);
 		pulseList = new ArrayList<HashMap<String, Integer>>();
 
-		init();
-		new GetStats().execute();
+		if (connectionDetector.isConnected()) {
+			init();
+			new GetStats().execute();
+		} else {
+			finish();
+			Toast.makeText(getApplicationContext(), "No network connection! Please login again...", Toast.LENGTH_LONG).show();
+		}	
 	}
 
 	private void setSpinner() {

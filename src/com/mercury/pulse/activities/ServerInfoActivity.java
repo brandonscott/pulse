@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pulse.R;
+import com.mercury.pulse.helpers.ConnectionHelper;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Pulse;
@@ -60,6 +61,7 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 	private ProgressBar mProgressBar;
 	//create a preferences handler
 	private PreferencesHandler mPreferencesHandler = new PreferencesHandler();
+	private ConnectionHelper connectionDetector = new ConnectionHelper(this);
 
 	private Pubnub pubnub = new Pubnub("pub-c-18bc7bd1-2981-4cc4-9c4e-234d25519d36", "sub-c-5782df52-d147-11e3-93dd-02ee2ddab7fe");
 
@@ -71,8 +73,13 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_serverinfo); 
 
-		init();
-		new LoadServerInfo().execute();
+		if (connectionDetector.isConnected()) {
+			init();
+			new LoadServerInfo().execute();
+		} else {
+			finish();
+			Toast.makeText(getApplicationContext(), "No network connection!", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void init() {
@@ -234,12 +241,12 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 				} else {
 					Log.e("ServiceHandler", "Couldn't get any data from the url");
 					this.cancel(true); //send a terminate signal teh asynctask to try and stop it executing
+					finish();
 					runOnUiThread(new Runnable() { //toast message must be displayed on ui thread as this is an asynctask
 						@Override
 						public void run() {
 							Toast.makeText(getApplicationContext(), "Problem! No Pulse data is available for this server...", Toast.LENGTH_LONG).show();
 						}});
-					finish();					
 				}
 			} catch (Exception e) {
 
@@ -272,71 +279,59 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 			} catch (Exception e) {
 
 			}
-
-			if (server.getServerName().length() >= 1) {
-				Log.e("servername", latestPulse.getUptime());
-				Log.e("servername", latestPulse.getCPUUsage()+"");
-				Log.e("servername", latestPulse.getHDDUsage()+"");
-				Log.e("servername", latestPulse.getRAMUsage()+"");
-				Log.e("servername", latestPulse.getPulseID()+"");
-				Log.e("servername", latestPulse.getServerID()+"");				
-				runOnUiThread(new Runnable() {  
-					@Override
-					public void run() {
-						mServerName.setText(server.getServerName());
-						mOSName.setText(server.getServerWindowsVersion());
-						mOSVersion.setText("OS Version: " + server.getServicePack());
-						mUptime.setText("Uptime: " + latestPulse.getUptime());
-						if (server.isOnline() == 1) {
-							mOnline.setText("Online");
-							mOnline.setTextColor(Color.parseColor("#99CC00"));
-						} else {
-							mOnline.setText("Offline");
-							mOnline.setTextColor(Color.parseColor("#FF4444"));
-						}
-						mPieChart.setData(latestPulse.getCPUUsage());
-						mPieChart2.setData(latestPulse.getRAMUsage());
-						mPieChart2.setSubtitle("RAM");
-						mPieChart3.setData(latestPulse.getHDDUsage());
-						mPieChart3.setSubtitle("HDD");
-					}
-				});
-				return null;
-			} else {
-				this.cancel(true);
-				finish();
-				return null;
-			}
+			return null; 
 		}
 
 		@Override
 		protected void onPostExecute(Void no) {
-			mProgressBar.setVisibility(View.GONE);
-			mServerName.setVisibility(View.VISIBLE);
-			mOSName.setVisibility(View.VISIBLE);
-			mOSVersion.setVisibility(View.VISIBLE);
-			mServerName.setVisibility(View.VISIBLE);
-			mUptime.setVisibility(View.VISIBLE);
-			mOnline.setVisibility(View.VISIBLE);
+			if (server.getServerName().length() >= 1) {	
+				mServerName.setText(server.getServerName());
+				mOSName.setText(server.getServerWindowsVersion());
+				mOSVersion.setText("OS Version: " + server.getServicePack());
+				mUptime.setText("Uptime: " + latestPulse.getUptime());
+				if (server.isOnline() == 1) {
+					mOnline.setText("Online");
+					mOnline.setTextColor(Color.parseColor("#99CC00"));
+				} else {
+					mOnline.setText("Offline");
+					mOnline.setTextColor(Color.parseColor("#FF4444"));
+				}
+				mPieChart.setData(latestPulse.getCPUUsage());
+				mPieChart2.setData(latestPulse.getRAMUsage());
+				mPieChart2.setSubtitle("RAM");
+				mPieChart3.setData(latestPulse.getHDDUsage());
+				mPieChart3.setSubtitle("HDD");
 
-			//resize circles to scale with screen width
-			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.65), (int) (getScreenWidth()*0.65));
-			layoutParams.addRule(RelativeLayout.BELOW, R.id.serverinfoactivity_servicepack);
-			layoutParams.setMargins(10, 40, 0, 0);
-			mPieChart.setLayoutParams(layoutParams);
-			mPieChart.setVisibility(View.VISIBLE);
-			layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.30), (int) (getScreenWidth()*0.30));
-			layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.stats_piechart);
-			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			layoutParams.setMargins(0, 0, 10, 0);
-			mPieChart2.setLayoutParams(layoutParams);
-			mPieChart2.setVisibility(View.VISIBLE);
-			layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.30), (int) (getScreenWidth()*0.30));
-			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
-			layoutParams.addRule(RelativeLayout.BELOW, R.id.stats_piechart2);
-			layoutParams.setMargins(0, 20, 10, 0);
-			mPieChart3.setLayoutParams(layoutParams);
-			mPieChart3.setVisibility(View.VISIBLE);
+				mProgressBar.setVisibility(View.GONE);
+				mServerName.setVisibility(View.VISIBLE);
+				mOSName.setVisibility(View.VISIBLE);
+				mOSVersion.setVisibility(View.VISIBLE);
+				mServerName.setVisibility(View.VISIBLE);
+				mUptime.setVisibility(View.VISIBLE);
+				mOnline.setVisibility(View.VISIBLE);
+
+				//resize circles to scale with screen width
+				RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.65), (int) (getScreenWidth()*0.65));
+				layoutParams.addRule(RelativeLayout.BELOW, R.id.serverinfoactivity_servicepack);
+				layoutParams.setMargins(10, 40, 0, 0);
+				mPieChart.setLayoutParams(layoutParams);
+				mPieChart.setVisibility(View.VISIBLE);
+				layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.30), (int) (getScreenWidth()*0.30));
+				layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.stats_piechart);
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				layoutParams.setMargins(0, 0, 10, 0);
+				mPieChart2.setLayoutParams(layoutParams);
+				mPieChart2.setVisibility(View.VISIBLE);
+				layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.30), (int) (getScreenWidth()*0.30));
+				layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+				layoutParams.addRule(RelativeLayout.BELOW, R.id.stats_piechart2);
+				layoutParams.setMargins(0, 20, 10, 0);
+				mPieChart3.setLayoutParams(layoutParams);
+				mPieChart3.setVisibility(View.VISIBLE);
+			} else {
+				this.cancel(true);
+				finish();
+			}			
 		}
 
 		private int getScreenWidth() {

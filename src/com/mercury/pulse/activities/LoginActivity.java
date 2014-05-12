@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pulse.R;
+import com.mercury.pulse.helpers.ConnectionHelper;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 
@@ -30,6 +31,7 @@ public class LoginActivity extends Activity {
 	private ProgressBar mSpinner;
 	//create a preferences handler
 	private PreferencesHandler preferencesHandler = new PreferencesHandler();
+	private ConnectionHelper connectionDetector = new ConnectionHelper(this);
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +45,11 @@ public class LoginActivity extends Activity {
 	}
 
 	public void sign_in_button_handler(View view) {
-		new LoginAuth().execute();
+		if (connectionDetector.isConnected()) {
+			new LoginAuth().execute();
+		} else {
+			Toast.makeText(getApplicationContext(), "No network connection!", Toast.LENGTH_LONG).show();
+		}		
 	}
 
 	public class LoginAuth extends AsyncTask<Void, Void, Void> {

@@ -31,6 +31,7 @@ import android.widget.Toast;
 import com.example.pulse.R;
 import com.mercury.pulse.adapters.NavDrawerListAdapter;
 import com.mercury.pulse.fragments.ServerListFragment;
+import com.mercury.pulse.helpers.ConnectionHelper;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.ServerGroup;
@@ -51,6 +52,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private static final String JSON_SITENAME= "name";
 	//create a preferences handler
 	private PreferencesHandler preferencesHandler = new PreferencesHandler();
+	private ConnectionHelper connectionHelper = new ConnectionHelper(this);
 
 	@Override
 	/**
@@ -60,7 +62,12 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		init();
+		if (connectionHelper.isConnected()) {
+			init();
+		} else {
+			finish();
+			Toast.makeText(getApplicationContext(), "No network connection! Please login again...", Toast.LENGTH_LONG).show();
+		}
 	}
 
 	/**
@@ -253,7 +260,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		@Override
 		protected void onPostExecute(Exception exception) {
-			Log.e("222", ((ServerGroup) mNavDrawerItems.get(0)).getServerGroupName());
 			((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(defaultServerGroupID).getServerGroupID());
 			mActionBar.setTitle(mNavDrawerItems.get(defaultServerGroupID).getServerGroupName());
 			mNavDrawerList.setAdapter(new NavDrawerListAdapter(getApplicationContext(), R.layout.activity_main_navdraweritem, mNavDrawerItems));
