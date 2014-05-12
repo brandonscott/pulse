@@ -47,7 +47,7 @@
         </activity>
         <activity
             android:name="com.mercury.pulse.activities.QRCodeActivity"
-            android:label="About"
+            android:label="Scan QR Code"
             android:parentActivityName="com.mercury.pulse.activities.MainActivity"
             android:screenOrientation="portrait" >
             <meta-data
