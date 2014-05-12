@@ -8,6 +8,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
+        android:layout_below="@+id/imageView1"
         android:layout_marginLeft="35dp"
         android:layout_marginRight="35dp"
         android:gravity="center"
@@ -65,7 +66,7 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/sign_in_button"
+        android:id="@+id/sign_in_button1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/loginstatus"
@@ -84,5 +85,15 @@
         android:layout_below="@+id/password"
         android:layout_toLeftOf="@+id/loginstatus"
         android:visibility="invisible" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="150dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="15dp"
+        android:layout_height="150dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/ic_launcher" />
 
 </RelativeLayout>

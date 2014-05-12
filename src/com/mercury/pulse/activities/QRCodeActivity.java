@@ -23,6 +23,13 @@ public class QRCodeActivity extends Activity implements OnClickListener {
 
 		init();
 	}
+	
+	@Override
+	public void onBackPressed() {
+	    finish();
+	    Intent i = new Intent(getBaseContext(), MainActivity.class);                      
+	    startActivity(i);
+	}
 
 	private void init() {
 		scanBtn = (Button)findViewById(R.id.btn_scan_button);
