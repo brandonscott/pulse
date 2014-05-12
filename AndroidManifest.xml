@@ -62,10 +62,6 @@
             android:name="com.mercury.pulse.activities.MainActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name="com.mercury.pulse.activities.GraphActivity"
-            android:screenOrientation="landscape" >
-        </activity>
     </application>
 
 </manifest>

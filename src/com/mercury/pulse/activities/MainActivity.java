@@ -87,7 +87,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		//instantiate navdrawer arraylist
 		mNavDrawerItems = new ArrayList<ServerGroup>();
 		
-		//mNavDrawerItems.add(new NavDrawerListItem(R.drawable.ic_action_qr, "Scan QR Code"));
 		new GetServerGroups().execute();
 
 		//set navdrawer listener
@@ -165,10 +164,6 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			case R.id.action_about:
 				Intent i = new Intent(getBaseContext(), AboutActivity.class);                      
 				startActivity(i);
-				return true;
-			case R.id.action_settings:
-				Toast.makeText(getApplicationContext(), "'settings' clicked",
-						Toast.LENGTH_LONG).show();
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -257,6 +252,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(defaultServerGroupID).getServerGroupID());
 			mActionBar.setTitle(mNavDrawerItems.get(defaultServerGroupID).getServerGroupName());
 			mNavDrawerList.setAdapter(new NavDrawerListAdapter(getApplicationContext(), R.layout.activity_main_navdraweritem, mNavDrawerItems));
+			mNavDrawerItems.add(new ServerGroup(R.drawable.ic_action_qr, "Scan QR Code"));
 		}
 	}
 
