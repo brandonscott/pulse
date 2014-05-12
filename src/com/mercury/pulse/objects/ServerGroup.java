@@ -4,11 +4,13 @@ public class ServerGroup {
 
 	private int serverGroupID;
 	private String serverGroupName;
+	private int icon;
 	
-	public ServerGroup(int serverGroupID, String serverGroupName) {
+	public ServerGroup(int serverGroupID, String serverGroupName, int icon) {
 		super();
 		this.serverGroupID = serverGroupID;
 		this.serverGroupName = serverGroupName;
+		this.icon = icon;
 	}
 	
 	public int getServerGroupID() {
@@ -17,6 +19,10 @@ public class ServerGroup {
 
 	public String getServerGroupName() {
 		return serverGroupName;
+	}
+	
+	public int getIcon() {
+		return icon;
 	}
 	
 }

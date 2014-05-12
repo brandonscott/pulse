@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 public class NavDrawerListAdapter extends ArrayAdapter<ServerGroup> {
 
-	private ArrayList<ServerGroup>			mTitles;
+	private ArrayList<ServerGroup>					mTitles;
 	private int										mLayout;
 
 	public NavDrawerListAdapter(Context context, int resource, ArrayList<ServerGroup> objects) {
@@ -34,7 +34,7 @@ public class NavDrawerListAdapter extends ArrayAdapter<ServerGroup> {
 		TextView title = (TextView)v.findViewById(R.id.main_navitem_title);
 		ImageView icon = (ImageView)v.findViewById(R.id.main_navitem_icon);
 		title.setText(mTitles.get(position).getServerGroupName());
-		icon.setImageResource(R.drawable.ic_action_person);
+		icon.setImageResource(mTitles.get(position).getIcon());
 		return v;
 	}
 }

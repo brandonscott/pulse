@@ -15,8 +15,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.pulse.R;
+import com.mercury.pulse.helpers.DialogHelper;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Pulse;
@@ -57,7 +59,8 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 	private SmallPieChartView mPieChart2, mPieChart3;
 	private ProgressBar mProgressBar;
 	//create a preferences handler
-	private PreferencesHandler preferencesHandler = new PreferencesHandler();
+	private PreferencesHandler mPreferencesHandler = new PreferencesHandler();
+	private DialogHelper mDialog = new DialogHelper();
 
 	private Pubnub pubnub = new Pubnub("pub-c-18bc7bd1-2981-4cc4-9c4e-234d25519d36", "sub-c-5782df52-d147-11e3-93dd-02ee2ddab7fe");
 
@@ -223,16 +226,13 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 				//creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 				//making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(pulseURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
+				String jsonStr = jsonHandler.makeServiceCall(pulseURL, JSONServiceHandler.GET, mPreferencesHandler.loadPreference(getApplicationContext(), "username"), mPreferencesHandler.loadPreference(getApplicationContext(), "password"));
 				Log.d("Latest Pulse: ", "> " + jsonStr);
-				if (jsonStr != null) {
+
+				if (jsonStr.length() > 3) { //3 is the character representation of '{ }' which is returned from blank json
 					try {
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
-							if (jsonStr.length() <= 4) {
-								fail = false;
-								return null;
-							}
 							latestPulse = new Pulse(obj.getInt(JSON_ID), obj.getInt(JSON_SERVERID), obj.getInt(JSON_RAMUSAGE), obj.getInt(JSON_CPUUSAGE), obj.getInt(JSON_HDDUSAGE), obj.getInt(JSON_UPTIME), obj.getInt(JSON_TIMESTAMP));
 						} catch (NumberFormatException e) {
 							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
@@ -242,6 +242,14 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 					}
 				} else {
 					Log.e("ServiceHandler", "Couldn't get any data from the url");
+					this.cancel(true);
+					runOnUiThread(new Runnable(){
+
+						@Override
+						public void run(){
+							Toast.makeText(getApplicationContext(), "Problem! No Pulse data is available for this server...", Toast.LENGTH_LONG).show();
+						}});
+					finish();					
 				}
 			} catch (Exception e) {
 
@@ -252,13 +260,16 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 				//creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 				//making a request to url and getting response
-				String jsonStr = jsonHandler.makeServiceCall(serverURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
+				String jsonStr = jsonHandler.makeServiceCall(serverURL, JSONServiceHandler.GET, mPreferencesHandler.loadPreference(getApplicationContext(), "username"), mPreferencesHandler.loadPreference(getApplicationContext(), "password"));
 				Log.d("Server Info: ", "> " + jsonStr);
 				if (jsonStr != null) {
 					try {
 						JSONObject obj= new JSONObject(jsonStr);
 						try {
 							server = new Server(obj.getInt(JSON_ID), obj.getString(JSON_SERVERNAME), obj.getString(JSON_OS_NAME), obj.getString(JSON_OS_VERSION), obj.getInt(JSON_ONLINE));
+							if (server.getServerName().length() >= 2) {
+								fail = true;
+							}
 						} catch (NumberFormatException e) {
 							Log.e("GetPulse", "Pulse JSON nodes couldn't be parsed at integers");
 						}
@@ -272,26 +283,38 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 
 			}
 
-			runOnUiThread(new Runnable() {  
-				@Override
-				public void run() {
-					mServerName.setText(server.getServerName());
-					mOSName.setText(server.getServerWindowsVersion());
-					mOSVersion.setText("OS Version: " + server.getServicePack());
-					mUptime.setText("Uptime: " + latestPulse.getUptime());
-					if (server.isOnline() == 1) {
-						mOnline.setText("Online");
-						mOnline.setTextColor(Color.parseColor("#99CC00"));
-					} else {
-						mOnline.setText("Offline");
-						mOnline.setTextColor(Color.parseColor("#FF4444"));
+			if (server.getServerName().length() >= 1) {
+				Log.e("servername", latestPulse.getUptime());
+				Log.e("servername", latestPulse.getCPUUsage()+"");
+				Log.e("servername", latestPulse.getHDDUsage()+"");
+				Log.e("servername", latestPulse.getRAMUsage()+"");
+				Log.e("servername", latestPulse.getPulseID()+"");
+				Log.e("servername", latestPulse.getServerID()+"");				
+				runOnUiThread(new Runnable() {  
+					@Override
+					public void run() {
+						mServerName.setText(server.getServerName());
+						mOSName.setText(server.getServerWindowsVersion());
+						mOSVersion.setText("OS Version: " + server.getServicePack());
+						mUptime.setText("Uptime: " + latestPulse.getUptime());
+						if (server.isOnline() == 1) {
+							mOnline.setText("Online");
+							mOnline.setTextColor(Color.parseColor("#99CC00"));
+						} else {
+							mOnline.setText("Offline");
+							mOnline.setTextColor(Color.parseColor("#FF4444"));
+						}
+						mPieChart.setData(latestPulse.getCPUUsage());
+						mPieChart2.setData(latestPulse.getRAMUsage());
+						mPieChart3.setData(latestPulse.getHDDUsage());
 					}
-					mPieChart.setData(latestPulse.getCPUUsage());
-					mPieChart2.setData(latestPulse.getRAMUsage());
-					mPieChart3.setData(latestPulse.getHDDUsage());
-				}
-			});
-			return null;
+				});
+				return null;
+			} else {
+				this.cancel(true);
+				finish();
+				return null;
+			}
 		}
 
 		@Override
@@ -299,7 +322,7 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 			runOnUiThread(new Runnable() {  
 				@Override
 				public void run() {
-					if (fail == true) {
+					/*if (fail == true) {
 						mProgressBar.setVisibility(View.GONE);
 						mServerName.setVisibility(View.VISIBLE);
 						mServerName.setText("No Pulse data available!");
@@ -311,21 +334,21 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 						mPieChart.setVisibility(View.GONE);
 						mPieChart2.setVisibility(View.GONE);
 						mPieChart3.setVisibility(View.GONE);
-					} else {
-						mProgressBar.setVisibility(View.GONE);
-						mServerName.setVisibility(View.VISIBLE);
-						mOSName.setVisibility(View.VISIBLE);
-						mOSVersion.setVisibility(View.VISIBLE);
-						mServerName.setVisibility(View.VISIBLE);
-						mCPUUsage.setVisibility(View.VISIBLE);
-						mRAMUsage.setVisibility(View.VISIBLE);
-						mHDDUsage.setVisibility(View.VISIBLE);
-						mUptime.setVisibility(View.VISIBLE);
-						mOnline.setVisibility(View.VISIBLE);
-						mPieChart.setVisibility(View.VISIBLE);
-						mPieChart2.setVisibility(View.VISIBLE);
-						mPieChart3.setVisibility(View.VISIBLE);
-					}
+					} else {*/
+					mProgressBar.setVisibility(View.GONE);
+					mServerName.setVisibility(View.VISIBLE);
+					mOSName.setVisibility(View.VISIBLE);
+					mOSVersion.setVisibility(View.VISIBLE);
+					mServerName.setVisibility(View.VISIBLE);
+					mCPUUsage.setVisibility(View.VISIBLE);
+					mRAMUsage.setVisibility(View.VISIBLE);
+					mHDDUsage.setVisibility(View.VISIBLE);
+					mUptime.setVisibility(View.VISIBLE);
+					mOnline.setVisibility(View.VISIBLE);
+					mPieChart.setVisibility(View.VISIBLE);
+					mPieChart2.setVisibility(View.VISIBLE);
+					mPieChart3.setVisibility(View.VISIBLE);
+					//}
 				}
 			});
 		}

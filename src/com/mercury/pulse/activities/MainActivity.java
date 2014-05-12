@@ -124,6 +124,11 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	 * 
 	 */
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+		if (mNavDrawerItems.get(arg2).getServerGroupName().equals("Scan QR Code")) {
+			Intent i = new Intent(getBaseContext(), QRCodeActivity.class);                      
+			startActivity(i);
+		}
+		
 		((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(arg2).getServerGroupID());
 		mActionBar.setTitle(mNavDrawerItems.get(arg2).getServerGroupName());
 		mNavDrawer.closeDrawers();
@@ -227,7 +232,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 						{
 							JSONObject obj=jsonArr.getJSONObject(i);
 							try {
-								mNavDrawerItems.add(new ServerGroup(obj.getInt(JSON_SERVERGROUPID), obj.getString(JSON_SITENAME)));
+								mNavDrawerItems.add(new ServerGroup(obj.getInt(JSON_SERVERGROUPID), obj.getString(JSON_SITENAME), R.drawable.ic_action_person));
 							} catch (NumberFormatException e) {
 								Log.e("GetServers", "Server ID could not be parsed as an integer...");
 							}
@@ -252,7 +257,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(defaultServerGroupID).getServerGroupID());
 			mActionBar.setTitle(mNavDrawerItems.get(defaultServerGroupID).getServerGroupName());
 			mNavDrawerList.setAdapter(new NavDrawerListAdapter(getApplicationContext(), R.layout.activity_main_navdraweritem, mNavDrawerItems));
-			mNavDrawerItems.add(new ServerGroup(R.drawable.ic_action_qr, "Scan QR Code"));
+			mNavDrawerItems.add(new ServerGroup(0, "Scan QR Code", R.drawable.ic_action_qr));
 		}
 	}
 
