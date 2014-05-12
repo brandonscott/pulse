@@ -37,46 +37,6 @@
         android:layout_toRightOf="@+id/stats_piechart" />
 
     <TextView
-        android:id="@+id/serverinfoactivity_CPUusage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/stats_piechart"
-        android:layout_alignLeft="@+id/stats_piechart"
-        android:layout_marginLeft="75dp"
-        android:fontFamily="sans-serif-condensed"
-        android:text="CPU Usage"
-        android:textColor="#777"
-        android:textSize="18sp"
-        android:textStyle="italic" />
-
-    <TextView
-        android:id="@+id/serverinfoactivity_RAMusage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/serverinfoactivity_CPUusage"
-        android:layout_alignTop="@+id/stats_piechart2"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/stats_piechart"
-        android:fontFamily="sans-serif-condensed"
-        android:text="RAM Usage"
-        android:textColor="#777"
-        android:textSize="18sp"
-        android:textStyle="italic" />
-
-    <TextView
-        android:id="@+id/serverinfoactivity_HDDusage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/stats_piechart3"
-        android:layout_alignLeft="@+id/serverinfoactivity_RAMusage"
-        android:fontFamily="sans-serif-condensed"
-        android:text="HDD Usage"
-        android:textColor="#777"
-        android:textSize="18sp"
-        android:textStyle="italic" />
-
-    <TextView
         android:id="@+id/serverinfoactivity_uptime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -13,10 +13,11 @@ import android.view.View;
 public class SmallPieChartView extends View {
 
 	private int								mPercentage;
-	private Paint							mCentreTextPaint, mCentreNumberPaint;
+	private Paint							mCentreNumberPaint, mCentreNumberSubtitle;
 	private RectF							mRect;
 	private int[]							mColours;
 	private int 							mChartColor;
+	private String							mSubtitle;
 
 
 	public SmallPieChartView(Context context) {
@@ -35,17 +36,20 @@ public class SmallPieChartView extends View {
 		mColours[0] = Color.parseColor("#99CC00");
 		mColours[1] = Color.parseColor("#FFBB33");
 		mColours[2] = Color.parseColor("#FF4444");
+		
+		//define our mSubtitle variable just no it's not null
+		mSubtitle = "aaa";
 
-		mCentreTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-		mCentreTextPaint.setTypeface(Typeface.create("sans-serif-condensed", Typeface.NORMAL));
-		mCentreTextPaint.setColor(mColours[1]);
-		mCentreTextPaint.setTextAlign(Align.CENTER);
-		mCentreTextPaint.setTextSize(80);
-		mCentreNumberPaint = new Paint(mCentreTextPaint);
+		mCentreNumberPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		mCentreNumberPaint.setTextAlign(Align.CENTER);
 		mCentreNumberPaint.setColor(Color.parseColor("#efefef"));
 		mCentreNumberPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
 		mCentreNumberPaint.setTextSize(80); //use small text size
+		mCentreNumberSubtitle = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mCentreNumberSubtitle.setTextAlign(Align.CENTER);
+		mCentreNumberSubtitle.setColor(Color.parseColor("#efefef"));
+		mCentreNumberSubtitle.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+		mCentreNumberSubtitle.setTextSize(45); //use large text size
 		mRect = new RectF();
 	}
 
@@ -62,6 +66,8 @@ public class SmallPieChartView extends View {
 		//draw the inner text
 		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2,
 				(getHeight()/2)+30, mCentreNumberPaint);
+		canvas.drawText(mSubtitle, getWidth()/2,
+				(getHeight()/2)-mCentreNumberSubtitle.ascent()+mCentreNumberPaint.descent()+15, mCentreNumberSubtitle);
 		canvas.save();
 		invalidate();
 	}
@@ -82,6 +88,10 @@ public class SmallPieChartView extends View {
 		} else {
 			mChartColor = mColours[2];
 		}		
+	}
+	
+	public void setSubtitle(String subtitle) {
+		mSubtitle = subtitle;
 	}
 
 }

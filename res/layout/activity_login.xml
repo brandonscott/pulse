@@ -6,6 +6,11 @@
         android:id="@+id/email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="35dp"
+        android:layout_marginRight="35dp"
+        android:gravity="center"
         android:inputType="textEmailAddress"
         android:maxLines="1"
         android:singleLine="true"
@@ -18,27 +23,17 @@
         android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignLeft="@+id/email"
+        android:layout_alignRight="@+id/email"
         android:layout_below="@+id/email"
         android:layout_marginTop="10dp"
         android:ems="10"
+        android:gravity="center"
         android:imeOptions="actionUnspecified"
         android:inputType="textPassword"
         android:maxLines="1"
         android:singleLine="true"
         android:text="Cadenc3!" />
-
-    <Button
-        android:id="@+id/sign_in_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/password"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:onClick="sign_in_button_handler"
-        android:paddingLeft="32dp"
-        android:paddingRight="32dp"
-        android:text="Sign In" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -64,19 +59,29 @@
         android:id="@+id/loginstatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/sign_in_button"
+        android:layout_below="@+id/password"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="10dp"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/loginstatus"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:onClick="sign_in_button_handler"
+        android:paddingLeft="32dp"
+        android:paddingRight="32dp"
+        android:text="Sign In" />
 
     <ProgressBar
         android:id="@+id/loginactivity_progressbar"
         style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/loginstatus"
-        android:layout_alignLeft="@+id/sign_in_button"
-        android:layout_alignTop="@+id/loginstatus"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/password"
         android:layout_toLeftOf="@+id/loginstatus"
         android:visibility="invisible" />
 

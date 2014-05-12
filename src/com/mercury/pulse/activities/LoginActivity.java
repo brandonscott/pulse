@@ -63,7 +63,6 @@ public class LoginActivity extends Activity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-
 			//parse the latest Pulse update
 			try {
 				//creating service handler class instance

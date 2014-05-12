@@ -22,7 +22,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.example.pulse.R;
 import com.jjoe64.graphview.CustomLabelFormatter;
@@ -71,6 +73,8 @@ public class GraphActivity extends Activity {
 	private LinearLayout mLayout;
 	private GraphViewSeries series;
 	private GraphViewData[] data;
+	private ProgressBar mProgressBar;
+	private TextView mYAxis, mXAxis, mLoadingPulses;
 
 	private Intent intent;
 	private Bundle bundle;
@@ -118,9 +122,13 @@ public class GraphActivity extends Activity {
 
 		mSpinner = (Spinner) findViewById(R.id.spinner);
 		mLayout = (LinearLayout) findViewById(R.id.graph);
+		mProgressBar = (ProgressBar) findViewById (R.id.graphactivity_progressbar);
+		mYAxis = (TextView) findViewById (R.id.y_axis);
+		mXAxis = (TextView) findViewById (R.id.x_axis);
+		mLoadingPulses = (TextView) findViewById (R.id.graphactivity_loadingpulses);
 		mGraphView = new LineGraphView(this, bundle.getString("title")+" Usage");
 		mGraphView.getGraphViewStyle().setHorizontalLabelsColor(Color.BLACK);
-		mGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);
+		mGraphView.getGraphViewStyle().setVerticalLabelsColor(Color.BLACK);		
 	}
 
 	@Override
@@ -244,6 +252,13 @@ public class GraphActivity extends Activity {
 	private class GetStats extends AsyncTask<Void, Void, Void> {
 		@Override
 		protected Void doInBackground(Void... params) {
+			mProgressBar.setVisibility(View.VISIBLE);
+			mLoadingPulses.setVisibility(View.VISIBLE);
+			mGraphView.setVisibility(View.GONE);
+			mSpinner.setVisibility(View.GONE);			
+			mXAxis.setVisibility(View.GONE);
+			mYAxis.setVisibility(View.GONE);
+			
 			JSONServiceHandler sh = new JSONServiceHandler();
 
 			String jsonStr = sh.makeServiceCall(url, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
@@ -274,7 +289,6 @@ public class GraphActivity extends Activity {
 						pulse.put(JSON_TIMESTAMP, timestamp);
 
 						pulseList.add(pulse);
-
 					}
 					
 					int num;
@@ -323,6 +337,13 @@ public class GraphActivity extends Activity {
 			mGraphView.setManualYAxisBounds(100.0, 0.0);
 
 			mLayout.addView(mGraphView);
+			mProgressBar.setVisibility(View.GONE);
+			mLoadingPulses.setVisibility(View.GONE);
+			mYAxis.setVisibility(View.VISIBLE);
+			mXAxis.setVisibility(View.VISIBLE);
+			mGraphView.setVisibility(View.VISIBLE);
+			mSpinner.setVisibility(View.VISIBLE);			
+			
 			pubnub(); //set pubnub to listen for pulse updates
 		}
 	}

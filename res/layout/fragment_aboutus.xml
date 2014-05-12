@@ -67,7 +67,7 @@
                         android:fontFamily="sans-serif-light"
                         android:padding="16dp"
                         android:singleLine="false"
-                        android:text="Mercury Software Studios are a startup software development company based in Bournemouth. We offer bespoke application development, personalised application support, and advanced technical solutions to business problems."
+                        android:text="Mercury Software Studios are an energetic software development team based in Bournemouth. We offer bespoke application development, personalised application support, and advanced technical solutions to business problems."
                         android:textColor="#222"
                         android:textSize="16sp" />
                 </LinearLayout>
@@ -195,7 +195,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="sans-serif-light"
                             android:paddingLeft="16dp"
-                            android:text="Mat Salamon"
+                            android:text="Mateusz Salamon"
                             android:textAppearance="?android:attr/textAppearanceLarge"
                             android:textColor="#333"
                             android:textSize="24dp"

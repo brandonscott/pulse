@@ -13,7 +13,7 @@ import android.view.View;
 public class PieChartView extends View {
 	
 	private int								mPercentage;
-	private Paint							mCentreNumberPaint;
+	private Paint							mCentreNumberPaint, mCentreNumberSubtitle;
 	private RectF							mRect;
 	private int[]							mColours;
 	private int 							mChartColor;
@@ -41,6 +41,12 @@ public class PieChartView extends View {
 		mCentreNumberPaint.setColor(Color.parseColor("#efefef"));
 		mCentreNumberPaint.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
 		mCentreNumberPaint.setTextSize(140); //use large text size
+		mCentreNumberSubtitle = new Paint(Paint.ANTI_ALIAS_FLAG);
+		mCentreNumberSubtitle.setTextAlign(Align.CENTER);
+		mCentreNumberSubtitle.setColor(Color.parseColor("#efefef"));
+		mCentreNumberSubtitle.setTypeface(Typeface.create("sans-serif-thin", Typeface.NORMAL));
+		mCentreNumberSubtitle.setTextSize(75); //use large text size
+		
 		mRect = new RectF();
 	}
 
@@ -54,9 +60,10 @@ public class PieChartView extends View {
 		mRect.set(0, 0, getWidth(), getHeight());
 		//draw the outer circle
 		canvas.drawArc(mRect, (float) 0f, (float) 360.00, true, paintPieChart());
-		//draw the inner text
 		canvas.drawText(Integer.toString(mPercentage) + "%", getWidth()/2,
 				(getHeight()/2)+40, mCentreNumberPaint);
+		canvas.drawText("CPU", getWidth()/2,
+				(getHeight()/2)-mCentreNumberSubtitle.ascent()+mCentreNumberPaint.descent()+15, mCentreNumberSubtitle);
 		canvas.save();
 		invalidate();
 	}

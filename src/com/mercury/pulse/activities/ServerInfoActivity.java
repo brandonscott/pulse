@@ -14,11 +14,11 @@ import android.view.Display;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.pulse.R;
-import com.mercury.pulse.helpers.DialogHelper;
 import com.mercury.pulse.helpers.PreferencesHandler;
 import com.mercury.pulse.objects.JSONServiceHandler;
 import com.mercury.pulse.objects.Pulse;
@@ -54,13 +54,12 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 	//define a server object to model the server
 	private Server server;
 	//define views
-	private TextView mServerName, mOSName, mOSVersion, mUptime, mCPUUsage, mRAMUsage, mHDDUsage, mOnline;
+	private TextView mServerName, mOSName, mOSVersion, mUptime, mOnline;
 	private PieChartView mPieChart;
 	private SmallPieChartView mPieChart2, mPieChart3;
 	private ProgressBar mProgressBar;
 	//create a preferences handler
 	private PreferencesHandler mPreferencesHandler = new PreferencesHandler();
-	private DialogHelper mDialog = new DialogHelper();
 
 	private Pubnub pubnub = new Pubnub("pub-c-18bc7bd1-2981-4cc4-9c4e-234d25519d36", "sub-c-5782df52-d147-11e3-93dd-02ee2ddab7fe");
 
@@ -91,9 +90,6 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 		mOSName = (TextView) findViewById(R.id.serverinfoactivity_windowsversion);
 		mOSVersion = (TextView) findViewById(R.id.serverinfoactivity_servicepack);
 		mUptime = (TextView) findViewById(R.id.serverinfoactivity_uptime);
-		mCPUUsage = (TextView) findViewById(R.id.serverinfoactivity_CPUusage);
-		mRAMUsage = (TextView) findViewById(R.id.serverinfoactivity_RAMusage);
-		mHDDUsage = (TextView) findViewById(R.id.serverinfoactivity_HDDusage);
 		mOnline = (TextView) findViewById(R.id.serverinfoactivity_online);
 		mPieChart = (PieChartView) findViewById(R.id.stats_piechart);
 		mPieChart.setOnClickListener(this);
@@ -178,8 +174,6 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 							}
 						});
 					}
-
-
 				}
 
 				@Override
@@ -207,9 +201,6 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 					mOSName.setVisibility(View.GONE);
 					mOSVersion.setVisibility(View.GONE);
 					mUptime.setVisibility(View.GONE);
-					mCPUUsage.setVisibility(View.GONE);
-					mRAMUsage.setVisibility(View.GONE);
-					mHDDUsage.setVisibility(View.GONE);
 					mOnline.setVisibility(View.GONE);
 					mPieChart.setVisibility(View.GONE);
 					mPieChart2.setVisibility(View.GONE);
@@ -242,11 +233,10 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 					}
 				} else {
 					Log.e("ServiceHandler", "Couldn't get any data from the url");
-					this.cancel(true);
-					runOnUiThread(new Runnable(){
-
+					this.cancel(true); //send a terminate signal teh asynctask to try and stop it executing
+					runOnUiThread(new Runnable() { //toast message must be displayed on ui thread as this is an asynctask
 						@Override
-						public void run(){
+						public void run() {
 							Toast.makeText(getApplicationContext(), "Problem! No Pulse data is available for this server...", Toast.LENGTH_LONG).show();
 						}});
 					finish();					
@@ -306,7 +296,9 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 						}
 						mPieChart.setData(latestPulse.getCPUUsage());
 						mPieChart2.setData(latestPulse.getRAMUsage());
+						mPieChart2.setSubtitle("RAM");
 						mPieChart3.setData(latestPulse.getHDDUsage());
+						mPieChart3.setSubtitle("HDD");
 					}
 				});
 				return null;
@@ -319,38 +311,32 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 
 		@Override
 		protected void onPostExecute(Void no) {
-			runOnUiThread(new Runnable() {  
-				@Override
-				public void run() {
-					/*if (fail == true) {
-						mProgressBar.setVisibility(View.GONE);
-						mServerName.setVisibility(View.VISIBLE);
-						mServerName.setText("No Pulse data available!");
-						mOSName.setVisibility(View.GONE);
-						mOSVersion.setVisibility(View.GONE);
-						mServerName.setVisibility(View.GONE);
-						mUptime.setVisibility(View.GONE);
-						mOnline.setVisibility(View.GONE);
-						mPieChart.setVisibility(View.GONE);
-						mPieChart2.setVisibility(View.GONE);
-						mPieChart3.setVisibility(View.GONE);
-					} else {*/
-					mProgressBar.setVisibility(View.GONE);
-					mServerName.setVisibility(View.VISIBLE);
-					mOSName.setVisibility(View.VISIBLE);
-					mOSVersion.setVisibility(View.VISIBLE);
-					mServerName.setVisibility(View.VISIBLE);
-					mCPUUsage.setVisibility(View.VISIBLE);
-					mRAMUsage.setVisibility(View.VISIBLE);
-					mHDDUsage.setVisibility(View.VISIBLE);
-					mUptime.setVisibility(View.VISIBLE);
-					mOnline.setVisibility(View.VISIBLE);
-					mPieChart.setVisibility(View.VISIBLE);
-					mPieChart2.setVisibility(View.VISIBLE);
-					mPieChart3.setVisibility(View.VISIBLE);
-					//}
-				}
-			});
+			mProgressBar.setVisibility(View.GONE);
+			mServerName.setVisibility(View.VISIBLE);
+			mOSName.setVisibility(View.VISIBLE);
+			mOSVersion.setVisibility(View.VISIBLE);
+			mServerName.setVisibility(View.VISIBLE);
+			mUptime.setVisibility(View.VISIBLE);
+			mOnline.setVisibility(View.VISIBLE);
+
+			//resize circles to scale with screen width
+			RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.65), (int) (getScreenWidth()*0.65));
+			layoutParams.addRule(RelativeLayout.BELOW, R.id.serverinfoactivity_servicepack);
+			layoutParams.setMargins(10, 40, 0, 0);
+			mPieChart.setLayoutParams(layoutParams);
+			mPieChart.setVisibility(View.VISIBLE);
+			layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.30), (int) (getScreenWidth()*0.30));
+			layoutParams.addRule(RelativeLayout.ALIGN_TOP, R.id.stats_piechart);
+			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			layoutParams.setMargins(0, 0, 10, 0);
+			mPieChart2.setLayoutParams(layoutParams);
+			mPieChart2.setVisibility(View.VISIBLE);
+			layoutParams = new RelativeLayout.LayoutParams((int) (getScreenWidth()*0.30), (int) (getScreenWidth()*0.30));
+			layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+			layoutParams.addRule(RelativeLayout.BELOW, R.id.stats_piechart2);
+			layoutParams.setMargins(0, 20, 10, 0);
+			mPieChart3.setLayoutParams(layoutParams);
+			mPieChart3.setVisibility(View.VISIBLE);
 		}
 
 		private int getScreenWidth() {
@@ -359,20 +345,13 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 			display.getSize(size);
 			return (size.x);
 		}
-
-		private int getScreenHeight() {
-			Display display = getWindowManager().getDefaultDisplay();
-			Point size = new Point();
-			display.getSize(size);
-			return (size.y);
-		}
 	}
 
 	@Override
 	public void onClick(View v) {
 		Intent i = new Intent(this, GraphActivity.class);
 		Bundle b = new Bundle();
-		String title = "test";
+		String title = null;
 		switch (v.getId()) {
 		case R.id.stats_piechart:
 			title = "CPU";
