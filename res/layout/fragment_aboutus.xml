@@ -227,7 +227,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:onClick="nickhandler"
+                android:onClick="nickbuttonhandler"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -410,7 +410,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
-                android:onClick="jimmybuttonhandler"
+                android:onClick="nickabuttonhandler"
                 android:orientation="vertical" >
 
                 <LinearLayout
@@ -470,6 +470,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="15dp"
                 android:layout_marginLeft="10dp"
+                android:onClick="jimmybuttonhandler"	
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="5dp"
                 android:orientation="vertical" >
