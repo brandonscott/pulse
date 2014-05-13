@@ -231,7 +231,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 				Log.d("Response: ", "> " + jsonStr);
 
-				if (jsonStr != null) {
+				if (jsonStr.length() > 3) { //3 is the character representation of '{ }' which is returned from blank json
 					try {
 						JSONArray jsonArr = new JSONArray(jsonStr);
 
@@ -249,10 +249,15 @@ public class MainActivity extends Activity implements OnItemClickListener {
 						e.printStackTrace();
 					}
 				} else {
-					this.cancel(true);
-					finish();
-					Toast.makeText(getApplicationContext(), "There was a problem getting server groups! Please contact Support.", Toast.LENGTH_LONG).show();
 					Log.e("GetServerGroups()", "Unable to get data back from the API");
+					this.cancel(true);
+					Intent i = new Intent(getBaseContext(), LoginActivity.class);                      
+					startActivity(i);
+					runOnUiThread(new Runnable() { //toast message must be displayed on ui thread as this is an asynctask
+						@Override
+						public void run() {
+							Toast.makeText(getApplicationContext(), "There was a problem getting server groups! Please contact Support.", Toast.LENGTH_LONG).show();
+						}});
 				}
 				return null;
 			} catch (Exception e) {

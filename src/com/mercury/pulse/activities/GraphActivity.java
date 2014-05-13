@@ -166,6 +166,7 @@ public class GraphActivity extends Activity {
 					long id) {
 				selectRange(pos);
 				view.invalidate();
+				mGraphView.invalidate();
 			}
 
 			@Override

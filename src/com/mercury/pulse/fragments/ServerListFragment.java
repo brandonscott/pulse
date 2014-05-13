@@ -42,6 +42,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 	//JSON Node names
 	private static final String JSON_ID = "id";
 	private static final String JSON_NAME = "name";
+	private static final String JSON_OS_NAME = "os_name";
 	//hashmap for ListView
 	ArrayList<HashMap<String, String>> serverList;
 	//create a preferences handler
@@ -128,7 +129,7 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 						{
 							JSONObject obj=jsonArr.getJSONObject(i);
 							try {
-								Server newServer = new Server(Integer.parseInt(obj.getString(JSON_ID)), obj.getString(JSON_NAME));
+								Server newServer = new Server(Integer.parseInt(obj.getString(JSON_ID)), obj.getString(JSON_NAME), obj.getString(JSON_OS_NAME));
 								mServerList.add(newServer);
 							} catch (NumberFormatException e) {
 								Log.e("GetServers", "Server ID could not be parsed as an integer...");

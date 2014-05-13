@@ -5,10 +5,11 @@ public class Server {
 	private int serverID, online;
 	private String serverName, serverWindowsVersion, serverServicePack;
 	
-	public Server(int serverID, String serverName) {
+	public Server(int serverID, String serverName, String serverWindowsVersion) {
 		super();
 		this.serverID = serverID;
 		this.serverName = serverName;
+		this.serverWindowsVersion = serverWindowsVersion;
 	}
 	
 	public Server(int serverID, String serverName, String serverWindowsVersion, String serverServicePack, int online) {
