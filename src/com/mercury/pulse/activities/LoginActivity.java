@@ -60,7 +60,7 @@ public class LoginActivity extends Activity {
 			mPassword = (TextView) findViewById (R.id.password);
 			mLoginStatus = (TextView) findViewById (R.id.loginstatus);
 			mSpinner = (ProgressBar) findViewById (R.id.loginactivity_progressbar);
-			mSignIn = (Button) findViewById (R.id.sign_in_button1);
+			mSignIn = (Button) findViewById (R.id.button1);
 
 			mSpinner.setVisibility(View.VISIBLE);
 			mSignIn.setEnabled(false);

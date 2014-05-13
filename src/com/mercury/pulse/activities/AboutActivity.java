@@ -3,9 +3,12 @@ package com.mercury.pulse.activities;
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
 import android.app.FragmentTransaction;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.example.pulse.R;
 import com.mercury.pulse.adapters.TabsPagerAdapter;
@@ -73,6 +76,48 @@ ActionBar.TabListener {
 
 	@Override
 	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+	}
+	
+	public void maxbuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("http://uk.linkedin.com/pub/max-rycroft/83/250/563"));
+			startActivity(intent);
+	}
+	
+	public void matbuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("https://plus.google.com/101432660343691189920/about"));
+			startActivity(intent);
+	}
+	
+	public void nickbuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("http://uk.linkedin.com/pub/nicholas-tyrrell/95/58/765"));
+			startActivity(intent);
+	}
+	
+	public void brandonbuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("http://www.brandonscott.co.uk/"));
+			startActivity(intent);
+	}
+	
+	public void chrisbuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("http://uk.linkedin.com/pub/christopher-franklin/1b/702/734"));
+			startActivity(intent);
+	}
+	
+	public void nickabuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("http://uk.linkedin.com/in/nickalderson"));
+			startActivity(intent);
+	}
+	
+	public void jimmybuttonhandler(View view) {
+		Intent intent = new Intent(Intent.ACTION_VIEW, 
+			     Uri.parse("http://www.jamesbaldwin.co.uk"));
+			startActivity(intent);
 	}
 
 }

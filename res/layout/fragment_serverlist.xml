@@ -26,6 +26,7 @@
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:fontFamily="sans-serif-condensed"
+        android:textSize="20sp"
         android:gravity="center_horizontal"
         android:visibility="invisible" />
 

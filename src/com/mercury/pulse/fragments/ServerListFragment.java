@@ -9,9 +9,11 @@ import org.json.JSONObject;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.graphics.Point;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,13 +78,25 @@ public class ServerListFragment extends Fragment implements OnItemClickListener 
 		mProgressBar = (ProgressBar)v.findViewById(R.id.serverlist_progressbar);
 		mTextView = (TextView)v.findViewById(R.id.serverlist_textview);
 		mGridView = (GridView)v.findViewById(R.id.serverlist_gridview);
+		if (getScreenWidth() >= 800) {
+			mGridView.setNumColumns(3);
+			Log.e("screenwidthbig", getScreenWidth()+"");
+		} else {
+			Log.e("screenwidthsmall", getScreenWidth()+"");
+		}
 		mGridView.setOnItemClickListener(this);
 		return v;
+	}
+	
+	private int getScreenWidth() {
+		Display display = getActivity().getWindowManager().getDefaultDisplay();
+		Point size = new Point();
+		display.getSize(size);
+		return (size.x);
 	}
 
 	public void setServerGroupID(int serverGroupID) {
 		url = "http://cadence-bu.cloudapp.net/servergroups/" + serverGroupID + "/servers";
-		//url += "/" + serverGroupID + "/servers";
 		new GetServers().execute();
 	}
 

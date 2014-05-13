@@ -8,6 +8,10 @@
         android:minSdkVersion="14"
         android:targetSdkVersion="19" />
 
+    <instrumentation
+        android:name="com.mercury.pulse.testing.TestRunner"
+        android:targetPackage="com.example.pulse" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -17,6 +21,8 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+        <uses-library android:name="android.test.runner" />
+
         <activity
             android:name="com.mercury.pulse.activities.LoginActivity"
             android:label="@string/app_name"

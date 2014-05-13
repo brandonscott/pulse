@@ -93,7 +93,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		//instantiate navdrawer arraylist
 		mNavDrawerItems = new ArrayList<ServerGroup>();
-		
+
 		new GetServerGroups().execute();
 
 		//set navdrawer listener
@@ -135,7 +135,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			Intent i = new Intent(getBaseContext(), QRCodeActivity.class);                      
 			startActivity(i);
 		}
-		
+
 		((ServerListFragment) mServerListFragment).setServerGroupID(mNavDrawerItems.get(arg2).getServerGroupID());
 		mActionBar.setTitle(mNavDrawerItems.get(arg2).getServerGroupName());
 		mNavDrawer.closeDrawers();
@@ -185,7 +185,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 	private class GetServerGroups extends AsyncTask<Void, Void, Exception> {
 		int defaultServerGroupID;
-		
+
 		@Override
 		protected void onPreExecute() {
 
@@ -199,7 +199,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 				//build url
 				String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/users/" + preferencesHandler.loadPreference(getApplicationContext(), "userid") + "/servergroups/default";
-				
+
 				//making a request to url and getting response
 				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 				Log.d("Latest Pulse: ", "> " + jsonStr);
@@ -220,7 +220,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			
+
 			//grab a list of server groups to use in the nav drawer
 			try {
 				// Creating service handler class instance
@@ -249,13 +249,15 @@ public class MainActivity extends Activity implements OnItemClickListener {
 						e.printStackTrace();
 					}
 				} else {
-					Log.e("ServiceHandler", "Couldn't get any data from the url");
+					this.cancel(true);
+					finish();
+					Toast.makeText(getApplicationContext(), "There was a problem getting server groups! Please contact Support.", Toast.LENGTH_LONG).show();
+					Log.e("GetServerGroups()", "Unable to get data back from the API");
 				}
 				return null;
 			} catch (Exception e) {
 				return e;
 			}
-			
 		}
 
 		@Override

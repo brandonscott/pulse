@@ -18,4 +18,5 @@ public class AboutUsFragment extends Fragment {
 		
 		return rootView;
 	}
+	
 }
