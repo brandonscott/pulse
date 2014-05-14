@@ -105,7 +105,7 @@ public class ServerInfoActivity extends Activity implements OnClickListener {
 		mPieChart3 = (SmallPieChartView) findViewById(R.id.stats_piechart3);
 		mPieChart3.setOnClickListener(this);
 		mProgressBar = (ProgressBar) findViewById(R.id.serverinfoactivity_progressbar);
-
+		
 		pubnub();
 	}
 

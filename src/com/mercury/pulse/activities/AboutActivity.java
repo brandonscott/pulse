@@ -86,7 +86,7 @@ ActionBar.TabListener {
 	
 	public void matbuttonhandler(View view) {
 		Intent intent = new Intent(Intent.ACTION_VIEW, 
-			     Uri.parse("https://plus.google.com/101432660343691189920/about"));
+			     Uri.parse("http://uk.linkedin.com/pub/mateusz-salamon/97/375/888"));
 			startActivity(intent);
 	}
 	

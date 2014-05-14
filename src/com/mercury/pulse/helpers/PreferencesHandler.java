@@ -26,4 +26,9 @@ public class PreferencesHandler {
 		return mSharedPreferences.getString(key, null);
 	}
 	
+	public int loadIntegerPreference(Context context, String key) {
+		SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+		return mSharedPreferences.getInt(key, 1);
+	}
+	
 }

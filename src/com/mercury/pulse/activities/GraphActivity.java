@@ -50,8 +50,6 @@ public class GraphActivity extends Activity {
 	private int SERVERID;
 	//define the JSON node we want to use (ram_usage/hdd_usage/cpu_usage)
 	private String usageTypeString;
-	//week in 30 second segments = 20160
-	private final int WEEK = 20160;
 	private java.text.DateFormat dateTimeFormatter;
 
 	//create Handler for UI thread updating
@@ -87,30 +85,40 @@ public class GraphActivity extends Activity {
 		return Double.valueOf(twoDForm.format(d));
 	}
 
+	//number of seconds in an hour
+	private final int HOUR = 3600;
+	//number of seconds in a day
+	private final int DAY = 86400;
+	//number of seconds in a week
+	private final int WEEK = 604800;
+
 	private void selectRange(int date) {
+		double start = pulseList.get(0).get(JSON_TIMESTAMP);
+		double end = pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP);
+		double size = end - start;
 		if (date == 0) { //viewport for an hour
 			//if pulse list is larger than an hour
-			if (pulseList.size() > 120) {
+			if (size > HOUR) {
 				//set viewport at end of range over an hour
-				mGraphView.setViewPort(pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP)-3600,3600);
+				mGraphView.setViewPort(end-HOUR,HOUR);
 			} else {
-				mGraphView.setViewPort(0, pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP)-pulseList.get(0).get(JSON_TIMESTAMP));
+				mGraphView.setViewPort(0, size);
 			}
 		} else if (date == 1) { //viewport for a day
 			//if pulse list is larger than a day
-			if (pulseList.size() > 2880) {
+			if (size > DAY) {
 				//set viewport at end of range over a day
-				mGraphView.setViewPort(pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP)-86400,86400);
+				mGraphView.setViewPort(end-DAY,DAY);
 			} else {
-				mGraphView.setViewPort(0, pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP)-pulseList.get(0).get(JSON_TIMESTAMP));
+				mGraphView.setViewPort(0, size);
 			}
 		} else if (date == 2) { //view port for week
 			//if pulseList is greater than 1 week
-			if (pulseList.size() > 20160) {
+			if (size > WEEK) {
 				//set graphView to end of week
-				mGraphView.setViewPort(pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP)-604800,604800);
+				mGraphView.setViewPort(end-WEEK,WEEK);
 			} else {
-				mGraphView.setViewPort(0, pulseList.get(pulses.length()-1).get(JSON_TIMESTAMP)-pulseList.get(0).get(JSON_TIMESTAMP));
+				mGraphView.setViewPort(0, size);
 			}
 		}
 	}

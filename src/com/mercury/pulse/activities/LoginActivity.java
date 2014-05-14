@@ -83,6 +83,7 @@ public class LoginActivity extends Activity {
 							if (obj.getInt(JSON_USERID) != 0) {
 								loginSuccess = true;
 								preferencesHandler.savePreference(getApplicationContext(), "userid", obj.getInt(JSON_USERID));
+								Log.e("obj.getInt(JSON_USERID)", obj.getInt(JSON_USERID)+"");
 								preferencesHandler.savePreference(getApplicationContext(), "username", mUsername.getText().toString());
 								preferencesHandler.savePreference(getApplicationContext(), "password", mPassword.getText().toString());
 

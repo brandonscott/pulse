@@ -46,13 +46,13 @@ public class MainActivity extends Activity implements OnItemClickListener {
 	private Fragment mServerListFragment;
 	private int mFrameLayout = R.id.mainactivity_framelayout;
 	//API URL to parse our JSON list of servers from
-	private static String serverGroupURL = "http://cadence-bu.cloudapp.net/servergroups";
 	//JSON servergroup Node names
 	private static final String JSON_SERVERGROUPID = "id";
 	private static final String JSON_SITENAME= "name";
 	//create a preferences handler
 	private PreferencesHandler preferencesHandler = new PreferencesHandler();
 	private ConnectionHelper connectionHelper = new ConnectionHelper(this);
+	private int userID;
 
 	@Override
 	/**
@@ -94,6 +94,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 		//instantiate navdrawer arraylist
 		mNavDrawerItems = new ArrayList<ServerGroup>();
 
+		userID = preferencesHandler.loadIntegerPreference(getApplicationContext(), "userid");
+		
 		new GetServerGroups().execute();
 
 		//set navdrawer listener
@@ -188,7 +190,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 
 		@Override
 		protected void onPreExecute() {
-
+		
 		}
 
 		@Override
@@ -198,7 +200,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				//creating service handler class instance
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 				//build url
-				String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/users/" + preferencesHandler.loadPreference(getApplicationContext(), "userid") + "/servergroups/default";
+				String defaultServerGroupURL = "http://cadence-bu.cloudapp.net/users/" + userID + "/servergroups/default";
 
 				//making a request to url and getting response
 				String jsonStr = jsonHandler.makeServiceCall(defaultServerGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
@@ -227,6 +229,7 @@ public class MainActivity extends Activity implements OnItemClickListener {
 				JSONServiceHandler jsonHandler = new JSONServiceHandler();
 
 				// Making a request to url and getting response
+				String serverGroupURL = "http://cadence-bu.cloudapp.net/users/" + userID + "/subscriptions";
 				String jsonStr = jsonHandler.makeServiceCall(serverGroupURL, JSONServiceHandler.GET, preferencesHandler.loadPreference(getApplicationContext(), "username"), preferencesHandler.loadPreference(getApplicationContext(), "password"));
 
 				Log.d("Response: ", "> " + jsonStr);
@@ -239,7 +242,8 @@ public class MainActivity extends Activity implements OnItemClickListener {
 						{
 							JSONObject obj=jsonArr.getJSONObject(i);
 							try {
-								mNavDrawerItems.add(new ServerGroup(obj.getInt(JSON_SERVERGROUPID), obj.getString(JSON_SITENAME), R.drawable.ic_action_person));
+								JSONObject innerJSON = obj.getJSONObject("server_group");
+								mNavDrawerItems.add(new ServerGroup(innerJSON.getInt(JSON_SERVERGROUPID), innerJSON.getString(JSON_SITENAME), R.drawable.ic_action_person));
 							} catch (NumberFormatException e) {
 								Log.e("GetServers", "Server ID could not be parsed as an integer...");
 							}
