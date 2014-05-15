@@ -1,7 +1,6 @@
 ## Pulse Client ##
 
-###A Java based Android app developed to interface with the Cadence API.###
-
+A Java based Android app developed to interface with the Cadence API.
 ----------
 
 Built using ADT (Android Development Toolkit).
