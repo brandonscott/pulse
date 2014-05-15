@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="date_array">
+        <item>Hour</item>
+        <item>Day</item>
+        <item>Week</item>
+    </string-array>
+</resources>
